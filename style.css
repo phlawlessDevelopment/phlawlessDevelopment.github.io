@@ -1,0 +1,171 @@
+/* Palette follows the game's ui_palette.gd: deep navy surfaces, gold accents. */
+:root {
+  --bg-deep: #0a0e17;
+  --bg: #111827;
+  --panel: #172033;
+  --line: #2c3954;
+  --text: #f3efe4;
+  --dim: #b9c1d3;
+  --muted: #7e8aa6;
+  --gold: #f2bc45;
+  --gold-hi: #ffe08a;
+  --on-gold: #2b1a04;
+  --ally: #4cc3ff;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg-deep);
+  color: var(--text);
+  font: 17px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.wrap {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+header.site {
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+
+header.site .wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+
+header.site img {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+header.site a.brand {
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+header.site nav {
+  margin-left: auto;
+  display: flex;
+  gap: 1.1rem;
+  font-size: 0.95rem;
+}
+
+header.site nav a { color: var(--dim); text-decoration: none; }
+header.site nav a:hover, header.site nav a[aria-current] { color: var(--gold-hi); }
+
+main { padding: 2.25rem 0 3.5rem; }
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+  margin: 0 0 0.4rem;
+  color: var(--gold-hi);
+}
+
+h2 {
+  font-size: 1.3rem;
+  line-height: 1.3;
+  margin: 2.5rem 0 0.6rem;
+  color: var(--gold);
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+}
+
+h3 {
+  font-size: 1.05rem;
+  margin: 1.6rem 0 0.3rem;
+  color: var(--text);
+}
+
+p, ul, ol { margin: 0.7rem 0; }
+li { margin: 0.3rem 0; }
+
+a { color: var(--ally); }
+a:hover { color: var(--gold-hi); }
+
+.meta { color: var(--muted); font-size: 0.95rem; margin: 0 0 1.5rem; }
+
+.lede { font-size: 1.1rem; color: var(--dim); }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+}
+
+.card > :first-child { margin-top: 0; }
+.card > :last-child { margin-bottom: 0; }
+
+.card h3 { margin-top: 0; color: var(--gold); }
+
+.button {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--on-gold);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.7rem 1.3rem;
+  border-radius: 10px;
+  border-bottom: 3px solid #a46d14;
+}
+
+.button:hover { background: var(--gold-hi); color: var(--on-gold); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+}
+
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line);
+}
+
+th { background: var(--panel); color: var(--gold); font-weight: 600; }
+
+.table-scroll { overflow-x: auto; }
+
+code {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.9em;
+}
+
+footer.site {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 1.5rem 0 2.5rem;
+}
+
+footer.site a { color: var(--dim); }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  h1 { font-size: 1.65rem; }
+  header.site .wrap { flex-wrap: wrap; }
+  header.site nav { margin-left: 0; width: 100%; }
+}

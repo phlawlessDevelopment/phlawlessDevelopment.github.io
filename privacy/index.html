@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy – Phlawless Autochess</title>
+<meta name="description" content="What Phlawless Autochess stores, what it shares, who with, and how to delete it.">
+<link rel="icon" href="/icon.png">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <img src="/icon.png" alt="" width="44" height="44">
+    <a class="brand" href="/">Phlawless Autochess</a>
+    <nav>
+      <a href="/privacy/" aria-current="page">Privacy</a>
+      <a href="/deleteme/">Delete my data</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<h1>Privacy Policy</h1>
+<p class="meta">Phlawless Autochess (Android package <code>com.phlawless.phac</code>) &middot; Last updated 25 October 2026</p>
+
+<p class="lede">The short version: the game keeps your progress on your phone. We run no analytics and no account system of our own. The only things that leave your device are an anonymous copy of your board for other players to fight, an optional Google sign-in that remembers a one-time ad-free purchase, and the ads in the free version, which are Google&rsquo;s.</p>
+
+<div class="card">
+  <h3>Who we are</h3>
+  <p>The data controller is <strong>Phlawless Games</strong>, the developer of Phlawless Autochess (&ldquo;we&rdquo;, &ldquo;us&rdquo;).</p>
+  <p>Contact for anything in this policy, including privacy requests: <a href="mailto:phlawless.games@gmail.com">phlawless.games@gmail.com</a></p>
+</div>
+
+<h2>1. At a glance</h2>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Data</th><th>Where it lives</th><th>Can it identify you?</th></tr></thead>
+  <tbody>
+    <tr><td>Game progress, run history, saved runs, settings, crystals, cosmetics, battle pass</td><td>Only on your device</td><td>Never sent to us</td></tr>
+    <tr><td>Your arena board (which units, where, with what items)</td><td>Our server</td><td>No. It carries no name, account or device identifier</td></tr>
+    <tr><td>Optional Google account for the ad-free purchase: a keyed hash of your Google account ID, plus your Google Play order ID</td><td>Our server</td><td>Only indirectly (pseudonymous). We never see your email, name or photo</td></tr>
+    <tr><td>Advertising ID, IP address and device details used to show ads (free version only)</td><td>Google AdMob</td><td>Yes, handled by Google as described in section 5</td></tr>
+    <tr><td>Your IP address when the game contacts our server</td><td>Cloudflare, in transit and in short-lived logs</td><td>Yes, but we do not store it in our database</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>2. What stays on your device</h2>
+<p>These files are written to the game&rsquo;s private storage on your phone and are never uploaded:</p>
+<ul>
+  <li>your profile: crystals, owned and equipped cosmetics, battle pass progress and whether the ad-free version is unlocked;</li>
+  <li>saved runs, run history and the codex of teams you have built;</li>
+  <li>your saved build plans;</li>
+  <li>if you sign in, the session token that proves it (see section 3.2);</li>
+  <li>a small queue of arena boards waiting to be uploaded (see section 3.1).</li>
+</ul>
+<p>Android&rsquo;s automatic app backup is switched off for this game, so these files are not copied to your Google account by the game. Uninstalling the game, or clearing its storage in Android settings, removes all of it.</p>
+
+<h2>3. What we collect and store on our servers</h2>
+
+<h3>3.1 Arena boards (anonymous)</h3>
+<p>Arena rounds pit you against boards other players built. When you reach an arena round, the game sends the board you fielded to our server so that other players can meet it later, and asks the server for an opponent&rsquo;s board.</p>
+<p>A board is a few dozen bytes: which units, their star levels, where they stand, which items they hold, the round and the game version. It contains <strong>no name, account, device identifier or advertising ID</strong>, and the game does not send one with it. Identical boards are stored once. Because nothing in it points to you, we treat it as anonymous game data rather than personal data, and we cannot find &ldquo;your&rdquo; board afterwards.</p>
+<p>If the server cannot be reached, the game quietly uses a board that ships with the game instead.</p>
+
+<h3>3.2 Optional Google account (only if you want the ad-free version)</h3>
+<p>The game is free with ads, or a one-time purchase removes them. The purchase is tied to a Google account so it survives a reinstall and follows you to a new phone. <strong>You never have to sign in to play.</strong></p>
+<p>If you choose to sign in or buy:</p>
+<ul>
+  <li>Google&rsquo;s sign-in on your device gives the game a signed ID token. It is sent to our server over HTTPS, which checks it with Google and reads <em>one</em> field from it: your Google account&rsquo;s stable identifier. Your email address, name and profile picture are not read and not stored.</li>
+  <li>We store a <strong>keyed hash</strong> of that identifier (HMAC-SHA256 with a secret only we hold) and the time the account was created. Without the secret, the hash cannot be turned back into your Google account.</li>
+  <li>After a purchase, your device sends the Google Play purchase token to our server, which verifies it with the Google Play Developer API and confirms it to Google Play. We store the Google Play <strong>order ID</strong>, the product (<code>remove_ads</code>) and the time. We do not receive or store your card or other payment details; those stay with Google Play.</li>
+  <li>When you buy, the game passes Google Play an opaque identifier derived from the same hash, so a purchase can only be claimed by the account it was bought for.</li>
+  <li>Your device keeps a session token (a signed token, valid for 90 days) so you stay signed in. Signing out removes it from the device.</li>
+</ul>
+<p>Nothing else about you is attached to the account. Your progress, crystals and cosmetics are not stored on the server.</p>
+
+<h3>3.3 Technical data</h3>
+<p>Whenever the game contacts our server, the request passes through Cloudflare, which sees your IP address. We use it only to limit how many requests one connection can make (to keep the service usable and stop abuse). It is not written to our database. Cloudflare also keeps short-lived operational logs of requests (which can include the IP address, the address requested and the time) so that we can find and fix faults. We do not use these logs to identify or profile you.</p>
+
+<h2>4. What we do not do</h2>
+<ul>
+  <li>We do not run analytics, crash reporting or behavioural tracking of our own.</li>
+  <li>We do not ask for your location, contacts, camera, microphone, photos or files.</li>
+  <li>We do not sell your data.</li>
+  <li>We do not use your data to make automated decisions about you.</li>
+  <li>We do not sell crystals or any other randomised paid items. The only thing for sale is the ad-free version.</li>
+</ul>
+
+<h2>5. Ads in the free version (Google AdMob)</h2>
+<p>The free version shows a full-screen ad when a run ends (never during a run). Ads are provided by <strong>Google AdMob</strong>. If you buy the ad-free version, the game does not request or show ads.</p>
+<p>To serve and measure ads, Google&rsquo;s software in the game may collect and use your <strong>advertising ID</strong>, <strong>IP address</strong> (and the approximate location derived from it), device and operating-system details, app version, and how you interact with ads. Google processes this as an independent controller under its own policies, not on our behalf; we do not receive the data. See <a href="https://policies.google.com/technologies/partner-sites">How Google uses information from sites or apps that use its services</a> and <a href="https://policies.google.com/privacy">Google&rsquo;s Privacy Policy</a>.</p>
+<p><strong>Consent (EEA, UK and Switzerland).</strong> If you are in one of these regions, the game shows Google&rsquo;s consent message before any ad is requested. You can play without agreeing; if you decline, ads are limited or non-personalised. You can change your choice later through the privacy options the consent message provides.</p>
+<p><strong>Your controls.</strong> On Android you can reset your advertising ID or opt out of ads personalisation in <em>Settings &rarr; Privacy &rarr; Ads</em> (the exact path varies by device) and manage Google&rsquo;s ad settings at <a href="https://myadcenter.google.com">myadcenter.google.com</a>.</p>
+
+<h2>6. Payments and Google services</h2>
+<p>Purchases are processed by Google Play under Google&rsquo;s terms and privacy policy. Google Sign-In and Google Play are provided by Google, which handles that data as described in <a href="https://policies.google.com/privacy">its own policy</a>. You can see and remove the game&rsquo;s access to your Google account in your Google Account settings under <em>Security &rarr; Your connections to third-party apps &amp; services</em>.</p>
+
+<h2>7. Why we process data, and on what legal basis</h2>
+<p>If the GDPR (EU or UK) applies to you, these are the purposes and legal bases, under Article 6:</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Purpose</th><th>Data</th><th>Legal basis</th></tr></thead>
+  <tbody>
+    <tr><td>Provide and restore the ad-free version you bought</td><td>Hashed account identifier, Play order ID, purchase time, session token</td><td>Contract (6(1)(b))</td></tr>
+    <tr><td>Run the arena (store anonymous boards, serve opponents)</td><td>Anonymous boards; your IP address in transit</td><td>Legitimate interests (6(1)(f)): giving players opponents</td></tr>
+    <tr><td>Keep the service working and protect it from abuse (rate limiting, fault-finding)</td><td>IP address, request details in short-lived logs</td><td>Legitimate interests (6(1)(f)): a secure, available service</td></tr>
+    <tr><td>Show and measure ads in the free version</td><td>Advertising ID, IP address, device data (held by Google)</td><td>Consent (6(1)(a)) where required, given through Google&rsquo;s consent message; otherwise Google&rsquo;s own basis</td></tr>
+    <tr><td>Answer your messages and privacy requests</td><td>Your email address and what you tell us</td><td>Legal obligation (6(1)(c)) for rights requests; legitimate interests (6(1)(f)) otherwise</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Providing data is not a legal or contractual requirement for playing. You can play the whole game without signing in; declining ad consent only changes which ads you see.</p>
+
+<h2>8. Who receives data</h2>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Recipient</th><th>Role</th><th>What they handle</th></tr></thead>
+  <tbody>
+    <tr><td>Cloudflare, Inc. (Cloudflare Workers)</td><td>Processor for us</td><td>Runs our server code and network edge; sees IP addresses and requests</td></tr>
+    <tr><td>Turso (database hosting)</td><td>Processor for us</td><td>Stores anonymous boards, hashed account identifiers and purchase records</td></tr>
+    <tr><td>Google (Sign-In, Play Billing, Play Developer API)</td><td>Provider of those services</td><td>Sign-in token, purchase token and order verification</td></tr>
+    <tr><td>Google (AdMob)</td><td>Independent controller</td><td>Advertising data described in section 5</td></tr>
+  </tbody>
+</table>
+</div>
+<p>We do not share data with anyone else, except where the law requires it.</p>
+
+<h2>9. International transfers</h2>
+<p>Cloudflare, Turso and Google operate globally, so data may be processed outside the EEA and the UK, including in the United States. Where that happens we rely on the safeguards these providers offer, such as the EU&ndash;US Data Privacy Framework and the European Commission&rsquo;s Standard Contractual Clauses.</p>
+
+<h2>10. How long we keep data</h2>
+<ul>
+  <li><strong>On your device:</strong> until you uninstall the game or clear its storage.</li>
+  <li><strong>Account and purchase records:</strong> until you delete your account (in the game or by email, see <a href="/deleteme/">Delete my data</a>). Deleting removes both together.</li>
+  <li><strong>Arena boards:</strong> they are anonymous. When a new game version changes the balance, older boards stop being served and may be removed.</li>
+  <li><strong>Server logs:</strong> held by Cloudflare for a short period under its own retention rules.</li>
+  <li><strong>Emails to us:</strong> as long as needed to deal with your request, and for a reasonable period afterwards in case of follow-up.</li>
+</ul>
+
+<h2>11. Your rights</h2>
+<p>Under the GDPR you have the right to access your data, have it corrected, have it erased, restrict or object to its processing, receive it in a portable form, and withdraw consent at any time (withdrawing does not affect what happened before). We do not make automated decisions with legal or similar effects.</p>
+<p>The data we hold about an account is small, so most of this is simple. To use any right, email <a href="mailto:phlawless.games@gmail.com">phlawless.games@gmail.com</a>. To delete your data, follow <a href="/deleteme/">Delete my data</a>. Because we store only a hash and a Play order ID, we may ask you for your order ID so that we can find your record; we will not ask for a password. We will reply within one month.</p>
+<p>You also have the right to complain to your data protection authority. In the UK that is the <a href="https://ico.org.uk">Information Commissioner&rsquo;s Office</a>; in the EU, the authority of the country where you live or work (<a href="https://www.edpb.europa.eu/about-edpb/about-edpb/members_en">list of authorities</a>). We would appreciate the chance to put things right first.</p>
+<p>For data held by Google (ads, Play, Sign-In), use Google&rsquo;s own tools at <a href="https://myaccount.google.com">myaccount.google.com</a>.</p>
+
+<h2>12. Children</h2>
+<p>Phlawless Autochess is not directed at children under 13, and we do not knowingly collect personal data from them. If you believe a child has given us personal data, email us and we will delete it.</p>
+
+<h2>13. Security</h2>
+<p>All traffic between the game and our server uses HTTPS. We keep account identifiers only as keyed hashes, verify purchases with Google rather than trusting the device, and keep our secrets out of the game and its source code. No system is perfectly secure, but we collect little on purpose so there is little to lose.</p>
+
+<h2>14. Changes to this policy</h2>
+<p>If we change what the game collects or shares, we will update this page and its date before the change ships, and where the law requires it we will ask for your consent again.</p>
+
+<h2>15. Contact</h2>
+<p>Phlawless Games &middot; <a href="mailto:phlawless.games@gmail.com">phlawless.games@gmail.com</a></p>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <a href="/">Home</a> &middot; <a href="/privacy/">Privacy Policy</a> &middot; <a href="/deleteme/">Delete my data</a> &middot; <a href="mailto:phlawless.games@gmail.com">Contact</a>
+  </div>
+</footer>
+</body>
+</html>
