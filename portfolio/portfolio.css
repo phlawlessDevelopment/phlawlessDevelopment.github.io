@@ -1,0 +1,147 @@
+/* Portfolio section only. Loaded after /style.css, which supplies the palette and
+   base elements. The shared stylesheet is deliberately left untouched so the game's
+   privacy and data-deletion pages cannot be affected by anything in here. */
+
+.pf-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+@media (min-width: 40rem) {
+  .pf-grid { grid-template-columns: 1fr 1fr; }
+  .pf-card.featured { grid-column: 1 / -1; }
+  /* With one featured card first, even positions start a row, so a last card
+     that is even has no partner: let it span instead of leaving a gap. */
+  .pf-card:last-child:nth-child(even) { grid-column: 1 / -1; }
+}
+
+.pf-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.pf-card.featured { border-color: var(--gold); }
+
+.pf-card h2,
+.pf-card h3 {
+  margin: 0 0 0.3rem;
+  padding: 0;
+  border: 0;
+  font-size: 1.2rem;
+  color: var(--gold);
+}
+
+.pf-card p { margin: 0.4rem 0; }
+.pf-card .kicker { color: var(--muted); font-size: 0.85rem; margin: 0 0 0.3rem; }
+.pf-card .links { margin-top: auto; padding-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; }
+
+.tags {
+  list-style: none;
+  padding: 0;
+  margin: 0.6rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tags li {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--dim);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.1rem 0.65rem;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1.25rem;
+  margin: 1.25rem 0;
+  padding: 1rem 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.facts dt { color: var(--muted); font-size: 0.95rem; }
+.facts dd { margin: 0; }
+
+@media (max-width: 34rem) {
+  .facts { grid-template-columns: 1fr; gap: 0.1rem; }
+  .facts dd { margin-bottom: 0.7rem; }
+}
+
+.notice {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 12px 12px 0;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.notice > :first-child { margin-top: 0; }
+.notice > :last-child { margin-bottom: 0; }
+.notice h2,
+.notice h3 { margin: 0 0 0.4rem; padding: 0; border: 0; font-size: 1.05rem; color: var(--gold); }
+.notice p.cta { margin-top: 1rem; }
+
+/* Numbered pipeline: each step is a panel with a gold counter. */
+.flow {
+  list-style: none;
+  counter-reset: step;
+  padding: 0;
+  margin: 1.25rem 0;
+}
+
+.flow > li {
+  counter-increment: step;
+  position: relative;
+  margin: 0 0 0.8rem;
+  padding: 0.85rem 1rem 0.85rem 3.5rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.flow > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 1rem;
+  top: 0.85rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--on-gold);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.flow > li > strong:first-child { color: var(--gold-hi); }
+
+.decisions h3 { color: var(--gold); margin-top: 1.4rem; }
+
+.back { margin-top: 2.5rem; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
