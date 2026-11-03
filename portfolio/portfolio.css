@@ -145,3 +145,24 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* Card and page media (game screenshots, trailers). */
+.pf-thumb {
+  display: block;
+  margin: -1.1rem -1.25rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+
+.pf-thumb img { display: block; width: 100%; height: auto; }
+
+.pf-media {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+}
