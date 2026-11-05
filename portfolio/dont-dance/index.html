@@ -2,100 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Don't Dance: a cosy-chaos arcade game – Phlawless Development</title>
-<meta name="description" content="Don't Dance is a short arcade game made in Godot 4. One tired monster, too many tiny singers: break up every choir and get back to sleep. Play it in your browser.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Don't Dance">
-<meta property="og:description" content="One tired monster. Too many tiny singers. A Godot 4 arcade game for one to three players, playable in the browser.">
-<meta property="og:image" content="https://phlawlessdevelopment.github.io/portfolio/dont-dance/poster.jpg">
-<link rel="icon" href="/icon.png">
-<link rel="stylesheet" href="/style.css">
-<link rel="stylesheet" href="/portfolio/portfolio.css">
+<title>Moved</title>
+<link rel="canonical" href="https://phlawlessdevelopment.github.io/dont-dance/">
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url=/dont-dance/">
+<script>location.replace('/dont-dance/' + location.hash);</script>
 </head>
 <body>
-<header class="site">
-  <div class="wrap">
-    <a class="brand" href="/portfolio/">Phlawless Development</a>
-    <nav>
-      <a href="/portfolio/">Portfolio</a>
-      <a href="/portfolio/mediator/">Mediator</a>
-      <a href="/portfolio/dont-dance/" aria-current="page">Don't Dance</a>
-      <a href="/">Autochess</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-<div class="wrap">
-
-<h1>Don't Dance</h1>
-<p class="meta">Arcade game &middot; Godot 4.7 &middot; Solo or local co-op for up to three</p>
-
-<p class="lede">One tired monster. Too many tiny singers. Puffs wander the bedroom, and whenever two meet they start to sing. Choirs pull in more puffs, the noise fills your rage, and at 100% you lose. Break up every choir, let the rage drain away, then lie still in bed for seven quiet seconds to win.</p>
-
-<video class="pf-media" controls preload="metadata" playsinline poster="/portfolio/dont-dance/poster.jpg" width="1280" height="720">
-  <source src="/portfolio/dont-dance/trailer.mp4" type="video/mp4">
-  <a href="/portfolio/dont-dance/trailer.mp4">Watch the trailer</a>
-</video>
-
-<div class="notice" id="play">
-  <h2>Play it in your browser</h2>
-  <p>The full game runs in the browser, with sound. It is about a 26&nbsp;MB download and needs a desktop browser with a keyboard, mouse or gamepad.</p>
-  <p class="cta"><a class="button" href="/portfolio/dont-dance/play/">Play Don't Dance &rarr;</a></p>
-</div>
-
-<h2>Three monsters</h2>
-<p>Each monster plays differently, keeps its own fastest winning time and sleeps in its own themed bedroom.</p>
-<div class="table-scroll">
-<table>
-  <thead>
-    <tr><th>Monster</th><th>Action</th><th>Hearing</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><strong>Sleepy Monster</strong></td><td>Smash: scatter every puff within reach.</td><td>Near choirs are louder.</td></tr>
-    <tr><td><strong>Sludge</strong></td><td>Touch puffs to collect them, then aim and launch the oldest passenger. Passengers slow you down and still sing, muffled.</td><td>Every choir is equally loud.</td></tr>
-    <tr><td><strong>Speedy</strong></td><td>An aimed straight charge that knocks away only the first puff it hits.</td><td>Near choirs are louder.</td></tr>
-  </tbody>
-</table>
-</div>
-
-<h2>Controls</h2>
-<dl class="facts">
-  <dt>Keyboard &amp; mouse</dt>
-  <dd>WASD or arrows to move, mouse to aim, Space or left click for your action. Esc pauses, R restarts.</dd>
-  <dt>Gamepad</dt>
-  <dd>Left stick to move, right stick to aim (or aim where you walk), A or right trigger for your action. Start pauses.</dd>
-  <dt>Co-op</dt>
-  <dd>Up to three players, one per monster, sharing one room: a keyboard player plus up to two gamepads, or three gamepads. Everyone has to be still in their own bed to win.</dd>
-</dl>
-
-<h2>How it is built</h2>
-<p>Don't Dance started as a single-file HTML prototype, iterated through several builds, and was then ported to Godot 4.7.</p>
-<ul>
-  <li><strong>Rules separate from rendering.</strong> The simulation is plain GDScript with no nodes: deterministic per seed and stepped at a fixed 60&nbsp;Hz. That keeps it testable headless, with thousands of automated rule checks, and makes the run clock game time, so it stops when you pause.</li>
-  <li><strong>Data-driven tuning.</strong> Every rule value and each monster lives in a Godot resource, editable in the inspector without touching code.</li>
-  <li><strong>A live, synthesized choir.</strong> There are no audio files. Every singing puff is a voice in a pentatonic round, panned to its position and as loud as the monster hears it, and muffled inside Sludge.</li>
-  <li><strong>Per-device local co-op.</strong> Each keyboard or gamepad joins the lobby and claims its own monster; movement, aim and abilities only respond to the assigned device, and a disconnected pad pauses the run until it returns.</li>
-  <li><strong>Web build.</strong> Exported as a single-threaded WebAssembly build, so it runs on GitHub Pages without special cross-origin headers.</li>
-</ul>
-<ul class="tags" aria-label="Technologies">
-  <li>Godot 4.7</li>
-  <li>GDScript</li>
-  <li>WebAssembly</li>
-  <li>Procedural audio</li>
-  <li>Local co-op</li>
-</ul>
-
-<p class="back"><a href="/portfolio/">&larr; Back to the portfolio</a></p>
-
-</div>
-</main>
-
-<footer class="site">
-  <div class="wrap">
-    <a href="/">Home</a> &middot; <a href="/portfolio/">Portfolio</a> &middot; <a href="https://github.com/phlawlessDevelopment" rel="noopener">GitHub</a>
-  </div>
-</footer>
+<p>This page has moved to <a href="/dont-dance/">https://phlawlessdevelopment.github.io/dont-dance/</a>.</p>
 </body>
 </html>

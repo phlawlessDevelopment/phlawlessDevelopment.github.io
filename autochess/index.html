@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phlawless Autochess: a portrait hex auto-battler &ndash; Phlawless Development</title>
+<meta name="description" content="Phlawless Autochess is a portrait hex auto-battler for Android, built with Godot. Draft units, merge them to 3 stars and win a 30-round run.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Phlawless Autochess: a portrait hex auto-battler &amp;ndash; Phlawless Development">
+<meta property="og:description" content="Phlawless Autochess is a portrait hex auto-battler for Android, built with Godot. Draft units, merge them to 3 stars and win a 30-round run.">
+<meta property="og:image" content="https://phlawlessdevelopment.github.io/autochess/home.webp">
+<link rel="canonical" href="https://phlawlessdevelopment.github.io/autochess/">
+<meta name="theme-color" content="#17181b">
+<link rel="icon" href="/icon.png">
+<link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="shell">
+<header class="rail">
+  <a class="wordmark" href="/">Phlawless<br> Development</a>
+  <div class="who">
+    <p class="name">Louis Hopkins</p>
+    <p class="tag">Software &amp; games.</p>
+  </div>
+  <nav class="rail-nav" aria-label="Site">
+    <a href="/" aria-current="true">Work</a>
+    <a href="/about/">About</a>
+    <a href="https://github.com/phlawlessDevelopment" rel="me noopener">GitHub</a>
+  </nav>
+  <p class="rail-foot">Web / Games / Systems</p>
+</header>
+<main class="main" id="content">
+<header class="page-head project-head">
+  <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>Phlawless Autochess</p>
+  <h1>Phlawless Autochess</h1>
+  <p class="summary">A portrait hex auto-battler for Android.</p>
+  <ul class="stack" aria-label="Technologies"><li>Godot</li><li>GDScript</li><li>Android</li></ul>
+  
+  <nav class="tabs" aria-label="Phlawless Autochess pages">
+    <a href="/autochess/" aria-current="page">Overview</a>
+    <a href="/autochess/privacy/">Privacy</a>
+    <a href="/autochess/deleteme/">Delete my data</a>
+  </nav>
+</header>
+
+<div class="hero hero-portraits">
+  <figure class="mat">
+    <img src="/autochess/home.webp" width="720" height="1280" alt="Phlawless Autochess home screen: the game logo above a row of units, a unit detail panel, and buttons to continue or start a run and to browse units, items, traits and rules." loading="eager">
+    <figcaption>Home</figcaption>
+  </figure>
+  <figure class="mat">
+    <img src="/autochess/board.webp" width="720" height="1280" alt="Deployment on the grassy hex board against two slimes in round 2 of 30, with two units waiting on the bench." loading="eager">
+    <figcaption>Deployment, round 2 of 30</figcaption>
+  </figure>
+  <figure class="mat">
+    <img src="/autochess/roster.webp" width="720" height="1280" alt="The unit browser: search, filters and a grid of pixel-art unit cards." loading="lazy">
+    <figcaption>Unit browser</figcaption>
+  </figure>
+</div>
+
+<div class="writeup">
+  <aside class="aside" aria-label="Project facts">
+    <dl class="facts">
+      <dt>Status</dt>
+      <dd>Closed testing on Google Play</dd>
+      <dt>Platform</dt>
+      <dd>Android, portrait, touch-first</dd>
+      <dt>Engine</dt>
+      <dd>Godot 4.7, GDScript, Mobile renderer</dd>
+      <dt>Backend</dt>
+      <dd>Cloudflare Workers and Turso, for arena boards and the ad-free purchase</dd>
+      <dt>Android</dt>
+      <dd>AdMob, Play Billing and a custom Kotlin Google Sign-In plugin</dd>
+      <dt>Business model</dt>
+      <dd>Free with ads, or a one-time purchase removes them</dd>
+    </dl>
+  </aside>
+  <article class="prose">
+<p class="lede">Draft units, merge three copies into a stronger star, position them on a hex board and watch them fight on their own. A run is 30 rounds and five hearts; lose them all and it is over.</p>
+
+<!-- Write-up draft. Facts are taken from the game's README and docs; expand or rewrite freely. -->
+
+<h2>The game</h2>
+<p>Each run follows a fixed plan of shop, gold, item and arena rounds across three tiers. In the shop you buy units with gold, which pays interest if you save it. Three matching copies merge into a stronger star, up to three stars. Your player level decides how many units you can field, from two up to nine.</p>
+<p>Combat is automatic. Units find the nearest enemy, move hex by hex, attack, build mana and cast their abilities. Traits reward fielding units that share an origin or class, items forge from components dropped in monster rounds, and every unit has one of eight elements that is strong or weak against others.</p>
+<p>Arena rounds are asynchronous player-versus-player. You fight a board another player actually built at the same point in their run, and the board you field is shared for others to meet in turn.</p>
+
+<h2>Built for one thumb</h2>
+<p>Everything is a drag: buy by dragging an offer to the bench, sell by dragging back up, deploy and reposition by dragging onto the board. A long press opens any unit&rsquo;s full detail card, including enemies mid-combat. A tap never buys, sells or deploys anything by accident, so there are no confirmation dialogs to slow a run down.</p>
+
+<h2>Engineering notes</h2>
+
+<h3>Deterministic combat</h3>
+<p>The board is 35 pointy-top hexes. Combat runs in integer 50&nbsp;ms ticks with no randomness: ties break by actor ID, and critical hits fill a meter instead of rolling dice. The same boards always produce the same fight, which makes balance testing and bug reports reproducible. A headless simulator reports win rates per unit, trait breakpoint and item.</p>
+
+<h3>A board is its own identity</h3>
+<p>Arena boards are bit-packed into a canonical byte string, typically around 19 bytes. Those bytes are the board&rsquo;s identity and the server&rsquo;s de-duplication key, with no hashes. They carry no account or device identifier. Unit and item ID tables are append-only, so a new season adds units without invalidating any stored board.</p>
+
+<h3>Generated content, not hand-edited files</h3>
+<p>Units, abilities, traits, items and monster packs are produced by generator scripts that own their output, so balance changes are made in one place and re-run. The in-game rules reference reads its numbers from the game&rsquo;s own constants, so it cannot drift out of date.</p>
+
+<h3>Small, careful backend</h3>
+<p>A Cloudflare Worker with a Turso database stores anonymous arena boards and remembers the ad-free purchase against a keyed hash of the player&rsquo;s Google account ID. Purchases are verified with Google rather than trusted from the device. If the server cannot be reached, the game falls back to bundled boards and carries on. The <a href="/autochess/privacy/">privacy policy</a> sets out exactly what leaves the device.</p>
+
+<h2>Status</h2>
+<p>The game is in closed testing on Google Play. The November season, The Wild Hunt, adds six mounted units to the 57-unit core roster.</p>
+  </article>
+</div>
+</main>
+</div>
+</body>
+</html>
