@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mediator: AI-moderated group chat &ndash; Phlawless Development</title>
-<meta name="description" content="Mediator is a real-time chat app with an AI facilitator. A write-up of how it decides when to step in, how it stays correct under concurrency and failure, and how it is deployed.">
+<title>Mediator: group chat with an AI that calms things down &ndash; Phlawless Development</title>
+<meta name="description" content="Mediator is a group chat with an AI that steps in when people get heated. How it decides when to speak, how it avoids double replies and double bills, and how it&#x27;s deployed.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mediator: AI-moderated group chat &amp;ndash; Phlawless Development">
-<meta property="og:description" content="Mediator is a real-time chat app with an AI facilitator. A write-up of how it decides when to step in, how it stays correct under concurrency and failure, and how it is deployed.">
+<meta property="og:title" content="Mediator: group chat with an AI that calms things down &amp;ndash; Phlawless Development">
+<meta property="og:description" content="Mediator is a group chat with an AI that steps in when people get heated. How it decides when to speak, how it avoids double replies and double bills, and how it&#x27;s deployed.">
 <meta property="og:image" content="https://phlawlessdevelopment.github.io/mediator/conversation-dark.webp">
 <link rel="canonical" href="https://phlawlessdevelopment.github.io/mediator/">
 <meta name="theme-color" content="#17181b">
@@ -35,10 +35,10 @@
 <header class="page-head project-head">
   <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>Mediator</p>
   <h1>Mediator</h1>
-  <p class="summary">Real-time conversations with an AI facilitator.</p>
+  <p class="summary">A group chat with an AI that steps in when people start getting heated.</p>
   <ul class="stack" aria-label="Technologies"><li>Java</li><li>Spring Boot</li><li>WebSocket</li><li>SQLite</li></ul>
   <div class="actions">
-    <a class="btn" href="#try-it">Try demo <span class="arrow" aria-hidden="true">&rarr;</span></a>
+    <a class="btn" href="#try-it">Try the demo <span class="arrow" aria-hidden="true">&rarr;</span></a>
   </div>
   <nav class="tabs" aria-label="Mediator pages">
     <a href="/mediator/" aria-current="page">Overview</a>
@@ -48,7 +48,7 @@
 </header>
 
 <figure class="mat hero">
-  <img src="/mediator/conversation-dark.webp" width="1280" height="800" alt="Mediator in its dark theme: a private conversation called Project planning between three members, with the conversation list on the left and the message composer below." loading="eager">
+  <img src="/mediator/conversation-dark.webp" width="1280" height="800" alt="Mediator in its dark theme: a private conversation called Project planning between three members, with the conversation list on the left and the message box below." loading="eager">
 </figure>
 <div class="shots">
   <figure class="mat shot">
@@ -57,7 +57,7 @@
   </figure>
   <figure class="mat shot">
     <img src="/mediator/conversation-light.webp" width="1280" height="800" alt="The same Mediator conversation in the light theme." loading="lazy">
-    <figcaption>Conversation, light theme</figcaption>
+    <figcaption>Same conversation, light theme</figcaption>
   </figure>
 </div>
 
@@ -65,93 +65,94 @@
   <aside class="aside" aria-label="Project facts">
     <dl class="facts">
   <dt>Status</dt>
-  <dd>Live, controlled preview. Deployed 2 November 2026.</dd>
+  <dd>Live demo, up since 2 November 2026. It&rsquo;s a controlled preview, not a finished product.</dd>
   <dt>Backend</dt>
-  <dd>Java 25, Spring Boot 4.1, Spring Security, WebSocket/STOMP, Spring Data, Flyway, SQLite</dd>
+  <dd>Java 25, Spring Boot 4.1, Spring Security, WebSocket / STOMP, Spring Data, Flyway, SQLite</dd>
   <dt>Frontend</dt>
-  <dd>Plain JavaScript modules, no framework or build step</dd>
+  <dd>Plain JavaScript modules, no framework, no build step</dd>
   <dt>AI</dt>
-  <dd>TypeSafe Jev scores messages; OpenAI writes the reply (an Anthropic adapter is included)</dd>
+  <dd>TypeSafe Jev scores the messages, OpenAI writes the replies (there&rsquo;s an Anthropic adapter too)</dd>
   <dt>Hosting</dt>
-  <dd>Oracle Cloud Always Free Arm instance (London), Docker Compose, Caddy, Let&rsquo;s Encrypt</dd>
+  <dd>Oracle Cloud&rsquo;s Always Free Arm instance (London), Docker Compose, Caddy, Let&rsquo;s Encrypt</dd>
   <dt>Tests</dt>
-  <dd>134 backend, 16 frontend. All model calls are mocked in the suite.</dd>
+  <dd>134 backend, 16 frontend. Every model call is mocked in the suite.</dd>
 </dl>
   </aside>
   <article class="prose">
-<p class="meta">Case study &middot; Last updated 2 November 2026</p>
-<p class="lede">A real-time chat app with a built-in AI facilitator. It watches each room for a conversation that is turning hostile and, when one needs help, posts a single neutral, practical intervention, then steps back for a cooldown.</p>
+<p class="meta">Write-up &middot; Last updated 2 November 2026</p>
+<p class="lede">It&rsquo;s a chat app with an AI mediator sitting in every room. It reads along, and when a conversation starts turning nasty it posts one calm, practical message, then backs off for a while.</p>
+<p>The chat side is pretty standard. The interesting bit is everything around the model call, making sure it only ever steps in once, never pays for the same reply twice, can&rsquo;t blow through its budget, and stops sending you messages the moment you leave a room.</p>
 
 <div class="notice" id="try-it">
   <h3>Before you try the demo</h3>
   <ul>
-    <li>Sign-up is open. Use a throwaway username and a password you do not use anywhere else (12 characters or more).</li>
-    <li>Do not post anything private. Messages are stored unencrypted in the demo database, and there is no password recovery or account deletion yet. Nothing is guaranteed to be kept.</li>
-    <li>While a room is calm, each message, the sender&rsquo;s username and a few earlier messages are sent to TypeSafe to be scored. If a room is flagged, the triggering message and up to 12 earlier ones are sent to OpenAI to write the reply.</li>
-    <li>AI calls run on a fixed allowance. When it is used up, chat keeps working but the mediator stays quiet.</li>
-    <li>To see it act, create a room and post something heated. It works with just one account, but it is threshold-based, so mild messages will not trigger it.</li>
+    <li>Sign-up is open. Use a throwaway username and a password you don&rsquo;t use anywhere else (12 characters or more).</li>
+    <li>Don&rsquo;t post anything private. Messages are stored unencrypted in the demo database, there&rsquo;s no password reset or account deletion in the app yet, and I&rsquo;m not promising to keep anything.</li>
+    <li>While a room is calm, each message, the sender&rsquo;s username and a few earlier messages get sent to TypeSafe to be scored. If a room gets flagged, the message that set it off and up to 12 earlier ones go to OpenAI to write the reply.</li>
+    <li>AI calls run on a fixed allowance. Once that&rsquo;s used up, chat still works but the mediator goes quiet.</li>
+    <li>To see it do its thing, make a room and post something heated. One account is enough, but it works off thresholds, so mild stuff won&rsquo;t set it off.</li>
   </ul>
   <p class="cta"><a class="button" href="https://phlawless-games.duckdns.org/" rel="noopener" target="_blank">Open the live demo <span aria-hidden="true">&nearr;</span><span class="sr-only">(opens in a new tab)</span></a></p>
 </div>
 
 <h2>What it does</h2>
-<p>People register, create rooms, and invite others by username. Rooms are invite-only: an invitee sees nothing until they accept. Messages are saved, so history survives a refresh, and they arrive live over a WebSocket. The interface has a searchable conversation list, light and dark themes, per-room drafts and keyboard shortcuts.</p>
-<p>The twist is an automated participant. When a conversation escalates, a message labelled <strong>Mediator &middot; AI facilitator</strong> appears in the room. It is grounded in what was actually said, offers one practical next step and asks at most one question. It is stored and delivered like any other message, but it is always visibly marked as automated.</p>
+<p>You sign up, make rooms and invite people by username. Rooms are invite-only, so you don&rsquo;t see anything until you accept. Messages are saved, so the history survives a refresh, and new ones come in live over a WebSocket. There&rsquo;s a searchable conversation list, light and dark themes, a draft per room and keyboard shortcuts.</p>
+<p>The twist is the extra participant. When a conversation escalates, a message labelled <strong>Mediator &middot; AI facilitator</strong> shows up in the room. It sticks to what people actually said, suggests one practical next step and asks one question at most. It&rsquo;s stored and delivered like any other message, but it&rsquo;s always clearly marked as automated.</p>
 
-<h2>How a message becomes an intervention</h2>
+<h2>How a message turns into an intervention</h2>
 <ol class="flow">
-  <li><strong>Save, then announce.</strong> The message is committed and an event is published. Classification runs asynchronously <em>after</em> commit, so sending a message never waits on an AI call.</li>
-  <li><strong>Score.</strong> A classifier sends the message and a few earlier ones to TypeSafe&rsquo;s Jev, which rates seven independent signals (personal attack, contempt, passive aggression, dismissiveness, motive attribution, inflammatory wording, retaliation) and a four-level hostility score. The history window is bounded by the reviewed message&rsquo;s own timestamp and ID, so a queued job can never see later messages.</li>
-  <li><strong>Decide in application code.</strong> Jev only scores. A policy class combines the signals with thresholds and weights into <code>CLEAR</code>, <code>BORDERLINE</code>, <code>TRIGGER</code> or <code>UNAVAILABLE</code>. Two borderline results within a room&rsquo;s last six classified messages also trigger. A classifier failure counts as <code>UNAVAILABLE</code> and chat carries on.</li>
-  <li><strong>Claim the room.</strong> On a trigger, one conditional SQL <code>UPDATE</code> moves the room from <code>CALM</code> to <code>MEDIATING</code>. Only the caller that changes a row publishes the request, so simultaneous triggers produce exactly one intervention.</li>
-  <li><strong>Generate, outside any transaction.</strong> A bounded worker claims the persisted request with a token, loads the trigger&rsquo;s context and calls the model. The database is not held during the call, so the rest of chat stays responsive. The conversation is passed as data, separate from the instructions, and the model has no tools and no view of other rooms.</li>
-  <li><strong>Publish, then cool down.</strong> Finishing the request stores the mediator message and starts the room&rsquo;s cooldown in one atomic step, and the message is broadcast only after that commits. Automated messages are never classified, so the mediator cannot trigger itself.</li>
+  <li><strong>Save, then announce.</strong> The message gets committed and an event is published. Scoring runs asynchronously <em>after</em> the commit, so sending a message never waits on an AI call.</li>
+  <li><strong>Score.</strong> The classifier sends the message and a few earlier ones to TypeSafe&rsquo;s Jev, which rates seven separate signals (personal attack, contempt, passive aggression, dismissiveness, motive attribution, inflammatory wording, retaliation) plus a four-level hostility score. The history window stops at the reviewed message&rsquo;s own timestamp and ID, so a job sitting in the queue can&rsquo;t peek at later messages.</li>
+  <li><strong>Decide in our own code.</strong> Jev only scores, it doesn&rsquo;t decide anything. A policy class combines the signals with thresholds and weights into <code>CLEAR</code>, <code>BORDERLINE</code>, <code>TRIGGER</code> or <code>UNAVAILABLE</code>. Two borderline results within a room&rsquo;s last six scored messages also count as a trigger. If the classifier fails it&rsquo;s <code>UNAVAILABLE</code> and chat carries on.</li>
+  <li><strong>Claim the room.</strong> On a trigger, one conditional SQL <code>UPDATE</code> moves the room from <code>CALM</code> to <code>MEDIATING</code>. Only the caller that actually changed a row publishes the request, so if two triggers land at once you still get exactly one intervention.</li>
+  <li><strong>Generate, outside any transaction.</strong> A bounded worker claims the saved request with a token, loads the context and calls the model. Nothing holds the database during the call, so the rest of the chat stays responsive. The conversation goes in as data, separate from the instructions, and the model has no tools and can&rsquo;t see other rooms.</li>
+  <li><strong>Publish, then cool down.</strong> Storing the mediator&rsquo;s message and starting the room&rsquo;s cooldown happen in one atomic step, and the message only gets broadcast after that commits. Automated messages are never scored, so the mediator can&rsquo;t set itself off.</li>
 </ol>
 
-<h2>Engineering decisions</h2>
+<h2>The decisions behind it</h2>
 <div class="decisions">
 
-<h3>Prefer a missed reply to a duplicate bill</h3>
-<p>If the process dies mid-request, work nobody had claimed is resubmitted, but a claimed request is allowed to expire instead of being generated again. Finishing a request must match the room, the trigger ID and the claim token, so a slow or obsolete worker cannot post into a newer session. Anything older than 60 seconds expires into cooldown, and a message sent before the previous cooldown ended cannot immediately re-trigger the room.</p>
+<h3>Better to miss a reply than pay for one twice</h3>
+<p>If the process dies mid-request, anything nobody had claimed yet gets resubmitted, but a claimed request is left to expire instead of being generated again. Finishing a request has to match the room, the trigger ID and the claim token, so a slow or stale worker can&rsquo;t post into a newer session. Anything older than 60 seconds expires into cooldown, and a message sent before the last cooldown ended can&rsquo;t instantly re-trigger the room.</p>
 
-<h3>A spend ceiling that lives in the database</h3>
-<p>Every external call reserves from a persistent allowance (by default 100 classifications and 20 replies per provider) before any network I/O, and failed calls count. The counters survive restarts. Once the allowance is spent, chat is unaffected and the mediator stays quiet. It is a request cap, not a dollar cap, and the docs say so.</p>
+<h3>A spending cap that lives in the database</h3>
+<p>Every external call reserves from a saved allowance (by default 100 classifications and 20 replies per provider) before it touches the network, and failed calls still count. The counters survive restarts. Once it&rsquo;s spent, chat is fine and the mediator just goes quiet. It&rsquo;s a cap on requests, not on money, and the docs say so.</p>
 
-<h3>Authorisation where the data actually flows</h3>
-<p>Membership is checked on REST calls and on every STOMP subscribe and send. Delivery also rechecks the recipient&rsquo;s current session and membership, so leaving a room or logging out cuts off a socket that is already open. The release audit found the first version kept delivering after a user left; it is now covered by an end-to-end test over a real HTTP and WebSocket connection.</p>
+<h3>Checking permissions where the data actually goes</h3>
+<p>Membership is checked on REST calls and on every STOMP subscribe and send. Delivery also rechecks the recipient&rsquo;s current session and membership, so leaving a room or logging out cuts off a socket that&rsquo;s already open. The release audit caught the first version still delivering messages after someone had left. There&rsquo;s now an end-to-end test for that over a real HTTP and WebSocket connection.</p>
 
-<h3>Single-writer SQLite, on purpose</h3>
-<p>One connection, WAL mode, and a schema owned by Flyway migrations and checked at startup. Keeping model calls out of transactions is what lets one connection serve a live chat. The design is single-instance by choice; scaling out would mean PostgreSQL and an external message broker, and the docs say that too.</p>
+<h3>SQLite with one writer, on purpose</h3>
+<p>One connection, WAL mode, and a schema owned by Flyway migrations and checked at startup. Keeping model calls out of transactions is what lets a single connection handle a live chat. It&rsquo;s single-instance by choice. Scaling out would mean PostgreSQL and a proper message broker, and the docs say that too.</p>
 
-<h3>Swappable providers, safe failures</h3>
-<p>The classifier is a port with a no-op fallback, so the app runs with no API keys. The OpenAI and Anthropic adapters are thin HTTP clients with a timeout, an output cap, a response-size cap and no automatic retries. Any provider failure becomes a plain system notice and a cooldown. Raw provider errors are neither logged nor shown to users.</p>
+<h3>Swappable providers that fail quietly</h3>
+<p>The classifier sits behind an interface with a do-nothing fallback, so the app runs without any API keys at all. The OpenAI and Anthropic adapters are thin HTTP clients with a timeout, an output cap, a response-size cap and no automatic retries. Any provider failure turns into a plain system notice and a cooldown. Raw provider errors never get logged or shown to anyone.</p>
 
 </div>
 
-<h2>Security and operations</h2>
+<h2>Security and running it</h2>
 <ul>
-  <li><strong>Application:</strong> server-side sessions, BCrypt passwords, CSRF protection on HTTP and on the STOMP connect frame, a content security policy and related headers, bounded request bodies, per-IP and per-user rate limits, and caps on connections and subscriptions.</li>
-  <li><strong>Container:</strong> runs as a non-root user with a read-only filesystem and dropped capabilities. Only the Caddy proxy is reachable from the internet, and SSH is restricted to the administrator&rsquo;s address.</li>
-  <li><strong>Images:</strong> scanned with Trivy. The official Caddy image had nine fixable high or critical findings, so the proxy is rebuilt on a patched Go toolchain and libraries, and that image scans clean.</li>
-  <li><strong>Backups:</strong> a nightly online SQLite backup, integrity-checked, encrypted to a public certificate and uploaded to private object storage. The host&rsquo;s credentials can add backups but not read or delete them, so a compromised host cannot destroy its own history. The decryption key is kept off the server. A restore into an isolated copy has been rehearsed.</li>
+  <li><strong>The app:</strong> server-side sessions, BCrypt passwords, CSRF protection on HTTP and on the STOMP connect frame, a content security policy and the related headers, size limits on request bodies, rate limits per IP and per user, and caps on connections and subscriptions.</li>
+  <li><strong>The container:</strong> runs as a non-root user with a read-only filesystem and dropped capabilities. Only the Caddy proxy is reachable from the internet, and SSH only accepts my IP.</li>
+  <li><strong>Images:</strong> scanned with Trivy. The official Caddy image had nine fixable high or critical findings, so the proxy gets rebuilt on a patched Go toolchain and libraries, and that one scans clean.</li>
+  <li><strong>Backups:</strong> a nightly online SQLite backup, integrity-checked, encrypted to a public certificate and uploaded to private object storage. The server&rsquo;s credentials can add backups but can&rsquo;t read or delete them, so a compromised server can&rsquo;t wipe its own history. The decryption key isn&rsquo;t on the server. A restore into a separate copy has been tested.</li>
 </ul>
 
-<h2>A bug that only appeared on real hardware</h2>
-<p>The test suite was green, but the container had never actually been run. On the Oracle host it crash-looped on startup. Docker mounts <code>tmpfs</code> with <code>noexec</code> by default, and the SQLite JDBC driver extracts a native library at startup that has to be mapped as executable. The fix was a small dedicated <code>tmpfs</code> that allows execution, owned by the app user and used only by the driver, leaving <code>/tmp</code> locked down. It was verified across a restart and a full container recreate.</p>
+<h2>A bug that only showed up on the real server</h2>
+<p>All the tests were green, but the container had never actually been run. On the Oracle box it crash-looped on startup. Docker mounts <code>tmpfs</code> with <code>noexec</code> by default, and the SQLite JDBC driver unpacks a native library at startup that has to be executable. The fix was a small dedicated <code>tmpfs</code> that allows execution, owned by the app user and only used by the driver, so <code>/tmp</code> stays locked down. It&rsquo;s been checked across a restart and a full container recreate.</p>
 
-<h2>Verification</h2>
+<h2>How it&rsquo;s tested</h2>
 <ul>
-  <li><strong>134 backend tests</strong> cover the API and CSRF, validation, membership, invitations, history bounds, the policy, atomic transitions, concurrent workers, timeout and restart recovery, late replies and provider contracts. One end-to-end test sends a message and follows it through the trigger and an asynchronous model stub to live delivery, while another user&rsquo;s message arrives mid-generation.</li>
-  <li><strong>16 frontend tests</strong> run on Node&rsquo;s built-in test runner with no dependencies. They cover reconnects, stale callbacks, message ordering and de-duplication, the AI label, and rendering model output as text rather than HTML.</li>
-  <li><strong>Against the deployed system:</strong> a script of about twenty checks covers anonymous and CSRF rejection, cookie flags, an uninvited account&rsquo;s access, live WebSocket delivery, persistence and revocation. A further run exercised a real classification and reply. The intervention reached other members in two to three seconds.</li>
-  <li><strong>Dependencies:</strong> Maven runtime packages and the vendored STOMP bundle were checked against the OSV advisory database, and the container images were scanned.</li>
+  <li><strong>134 backend tests</strong> cover the API and CSRF, validation, membership, invites, history bounds, the policy, atomic transitions, concurrent workers, timeouts and restart recovery, late replies and provider contracts. One end-to-end test sends a message and follows it through the trigger and a fake async model all the way to live delivery, while another user&rsquo;s message lands mid-generation.</li>
+  <li><strong>16 frontend tests</strong> run on Node&rsquo;s built-in test runner, no dependencies. They cover reconnects, stale callbacks, message ordering and de-duplication, the AI label, and making sure model output gets rendered as text, not HTML.</li>
+  <li><strong>Against the live server:</strong> a script of about twenty checks covers anonymous and CSRF rejection, cookie flags, what an uninvited account can get at, live WebSocket delivery, persistence and revocation. Another run did a real classification and reply, and the intervention reached the other members in two to three seconds.</li>
+  <li><strong>Dependencies:</strong> the Maven runtime packages and the vendored STOMP bundle were checked against the OSV advisory database, and the container images were scanned.</li>
 </ul>
 
-<h2>Limits and what comes next</h2>
+<h2>What it doesn&rsquo;t do yet</h2>
 <ul>
-  <li><strong>Reply quality is not formally evaluated.</strong> What has been verified is the connection and the lifecycle. The replies seen so far read as neutral and specific, but that is a judgement by eye, not a measurement. A labelled dataset of expected outcomes exists in the repository but is not yet wired into the tests; that is the next step.</li>
-  <li><strong>Single instance.</strong> The in-process message broker and SQLite are a deliberate trade-off for a small deployment.</li>
-  <li><strong>Not production-complete as a product.</strong> Conversations are stored in plaintext, and password recovery, email verification, account deletion and moderation tooling are not built.</li>
+  <li><strong>Reply quality isn&rsquo;t properly measured.</strong> What&rsquo;s been verified is the plumbing and the lifecycle. The replies I&rsquo;ve seen read as neutral and specific, but that&rsquo;s me eyeballing them, not a measurement. There&rsquo;s a labelled dataset of expected outcomes in the repo that isn&rsquo;t wired into the tests yet, and that&rsquo;s next.</li>
+  <li><strong>It&rsquo;s one instance.</strong> The in-process message broker and SQLite are a deliberate trade-off for something this small.</li>
+  <li><strong>It&rsquo;s not a finished product.</strong> Conversations are stored in plaintext, and there&rsquo;s no password recovery, email verification, account deletion or moderation tooling yet.</li>
 </ul>
   </article>
 </div>
