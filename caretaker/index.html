@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caretaker: a janitor, a dark school and a torch &ndash; Phlawless Development</title>
+<meta name="description" content="Caretaker is a top-down Godot game. You&#x27;re the night janitor, kids are trashing the school, and you&#x27;ve got a torch, ten minutes and a damage bill to keep down.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Caretaker: a janitor, a dark school and a torch &amp;ndash; Phlawless Development">
+<meta property="og:description" content="Caretaker is a top-down Godot game. You&#x27;re the night janitor, kids are trashing the school, and you&#x27;ve got a torch, ten minutes and a damage bill to keep down.">
+<meta property="og:image" content="https://phlawlessdevelopment.github.io/caretaker/gameplay.webp">
+<link rel="canonical" href="https://phlawlessdevelopment.github.io/caretaker/">
+<meta name="theme-color" content="#1d2021">
+<link rel="icon" href="/icon.png">
+<link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="shell">
+<header class="rail">
+  <a class="wordmark" href="/">Phlawless<br> Development</a>
+  <div class="who">
+    <p class="name">Louis Hopkins</p>
+    <p class="tag">Software &amp; games.</p>
+  </div>
+  <nav class="rail-nav" aria-label="Site">
+    <a href="/" aria-current="true">Work</a>
+    <a href="/about/">About</a>
+    <a href="https://github.com/phlawlessDevelopment" rel="me noopener">GitHub</a>
+  </nav>
+  <p class="rail-foot">Web / Games / Systems</p>
+</header>
+<main class="main" id="content">
+<header class="page-head project-head">
+  <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>Caretaker</p>
+  <h1>Caretaker</h1>
+  <p class="summary">You&rsquo;re the school janitor, it&rsquo;s night, and the kids are trashing the place.</p>
+  <ul class="stack" aria-label="Technologies"><li>Godot</li><li>GDScript</li><li>2D lighting</li></ul>
+</header>
+
+<figure class="mat hero">
+  <img src="/caretaker/gameplay.webp" width="1280" height="720" alt="Caretaker gameplay: the janitor shines his torch in a dark classroom next to a smashed locker, while the PA announces kids sneaking in through the south entrance. A green radar minimap sits top right and a list of rooms with props left to fix sits top left." loading="eager">
+</figure>
+<div class="shots">
+  <figure class="mat shot">
+    <img src="/caretaker/night-shift.webp" width="1280" height="720" alt="Character select titled Who's on the night shift?, with four caretakers: Radar with a handheld scanner, Segway, Detective with a magnifying glass, and Assistant with a CCTV monitor." loading="lazy">
+    <figcaption>Four caretakers, four powers</figcaption>
+  </figure>
+</div>
+
+<div class="writeup">
+  <aside class="aside" aria-label="Project facts">
+    <dl class="facts">
+      <dt>Status</dt>
+      <dd>Prototype, played on desktop</dd>
+      <dt>Genre</dt>
+      <dd>Top-down stealth chase, against the clock</dd>
+      <dt>Engine</dt>
+      <dd>Godot 4.7, GDScript, Compatibility renderer</dd>
+      <dt>Controls</dt>
+      <dd>WASD and mouse, or a gamepad</dd>
+      <dt>History</dt>
+      <dd>A remake of a 3D Unity game I made in 2020, now 2D top-down</dd>
+    </dl>
+  </aside>
+  <article class="prose">
+<p class="lede">The lights are off, groups of kids are sneaking into the school, and you&rsquo;ve got a torch and ten minutes. Fix everything they wreck before the clock runs out.</p>
+<p>The kids run from you, so you can&rsquo;t just tidy up behind them. Hold the torch on one for a couple of seconds and you&rsquo;ve identified them (&ldquo;I knew that was you, Jimmy!&rdquo;), and they go home for good. Fewer kids means less wrecking, so that&rsquo;s how you get ahead.</p>
+
+<h2>The shift</h2>
+<p>Three groups of two to four kids come in through the school&rsquo;s two entrances, and the PA tells you which one. Every kid has a rolled leadership and lone-wolf score, so groups follow their bossiest member, and a kid who doesn&rsquo;t fancy the leader wanders off and starts a group of their own.</p>
+<p>Chairs, desks, lockers, bookcases, chalkboards and the teacher&rsquo;s chair all have a price. Smashing one goes on the damage bill, fixing it takes half back, and any kid you haven&rsquo;t lit up for a while runs up a pound a second just by being about. The bill is your score.</p>
+<p>Doors open by themselves and block the torch when they shut. Open one on a room full of kids and they hear it and scatter. When a kid walks into a room its lights come on, which gives them away, and you can sneak over and flick the switch back off.</p>
+
+<h2>Four caretakers</h2>
+<div class="table-scroll">
+<table>
+  <thead>
+    <tr><th>Caretaker</th><th>Power</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Radar</strong></td><td>A minimap with no kids on it until you find them. Fire a tag shot down the beam to mark a kid for 15 seconds, or ping everyone nearby while it recharges.</td></tr>
+    <tr><td><strong>Segway</strong></td><td>Tank controls with the torch bolted on the front, and a dash. The battery recharges from light, but every dash smashes something and adds to the bill.</td></tr>
+    <tr><td><strong>Detective</strong></td><td>Fix a wrecked prop and a trail runs from you to the kid who broke it, straight through the walls.</td></tr>
+    <tr><td><strong>Assistant</strong></td><td>Cuts to the CCTV in whichever room the PA names. Night vision shows every kid, but you stand still while you watch.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>How it&rsquo;s built</h2>
+<ul>
+  <li><strong>Real shadows.</strong> Walls and furniture cast shadows from the torch and from the moonlight coming through the windows, so kids can hide behind desks and bleachers. A light tuner in the pause menu adjusts it all live.</li>
+  <li><strong>Kids that run sensibly.</strong> They flee along a safety map of the whole school, avoid dead ends, sidestep the beam and duck round corners to break line of sight. They won&rsquo;t run past you, so you can corner them.</li>
+  <li><strong>Ported from the old version.</strong> I went through the 2020 Unity game&rsquo;s C#, scenes and prefabs, wrote up everything it had that this one didn&rsquo;t, then brought it all across, the Detective and the Assistant included.</li>
+  <li><strong>Mouse or pad, whichever you touched last.</strong> The on-screen hints switch between keys and pad buttons to match.</li>
+</ul>
+  </article>
+</div>
+</main>
+</div>
+</body>
+</html>

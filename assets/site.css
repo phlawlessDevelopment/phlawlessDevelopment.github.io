@@ -605,6 +605,7 @@ a.mat:hover { border-color: var(--orange); }
   margin: 1rem 0 0;
   max-width: 64rem;
 }
+.shots:has(> :only-child) { grid-template-columns: minmax(0, 32rem); }
 .shot { margin: 0; }
 .shot.mat { padding: 0.7rem; }
 
