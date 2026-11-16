@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graffiti: an isometric brawler about holding the floor &ndash; Phlawless Development</title>
+<meta name="description" content="Graffiti is an isometric action game made in Godot. Fight stylishly in the right place to claim areas of the map in your colour, solo or with up to eight friends on a local network.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Graffiti: an isometric brawler about holding the floor &amp;ndash; Phlawless Development">
+<meta property="og:description" content="Graffiti is an isometric action game made in Godot. Fight stylishly in the right place to claim areas of the map in your colour, solo or with up to eight friends on a local network.">
+<meta property="og:image" content="https://phlawlessdevelopment.github.io/graffiti/fight.webp">
+<link rel="canonical" href="https://phlawlessdevelopment.github.io/graffiti/">
+<meta name="theme-color" content="#1d2021">
+<link rel="icon" href="/icon.png">
+<link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="shell">
+<header class="rail">
+  <a class="wordmark" href="/">Phlawless<br> Development</a>
+  <div class="who">
+    <p class="name">Louis Hopkins</p>
+    <p class="tag">Software &amp; games.</p>
+  </div>
+  <nav class="rail-nav" aria-label="Site">
+    <a href="/" aria-current="true">Work</a>
+    <a href="/about/">About</a>
+    <a href="https://github.com/phlawlessDevelopment" rel="me noopener">GitHub</a>
+  </nav>
+  <p class="rail-foot">Web / Games / Systems</p>
+</header>
+<main class="main" id="content">
+<header class="page-head project-head">
+  <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>Graffiti</p>
+  <h1>Graffiti</h1>
+  <p class="summary">Fight well in the right place, and the floor turns your colour.</p>
+  <ul class="stack" aria-label="Technologies"><li>Godot</li><li>GDScript</li><li>LAN multiplayer</li></ul>
+</header>
+
+<figure class="mat hero">
+  <img src="/graffiti/fight.webp" width="1280" height="720" alt="Graffiti gameplay: the orange Fire pawn fights a pack of violet corruption enemies beside the Plaza fountain, which shows a best score of 1,678. A purple stomp warning spreads across the floor, and the Plaza's border has turned orange." loading="eager">
+</figure>
+<div class="shots">
+  <figure class="mat shot">
+    <img src="/graffiti/element-select.webp" width="1280" height="720" alt="Graffiti's character select: four pawns in Water blue, Fire orange, Earth ochre and Wind mint." loading="lazy">
+    <figcaption>Picking an element</figcaption>
+  </figure>
+  <figure class="mat shot">
+    <img src="/graffiti/plaza.webp" width="1280" height="720" alt="The start of a match: the Fire pawn and its floating friend in the middle of the unclaimed Plaza, with the skill bar along the bottom and the match clock at 5:00." loading="lazy">
+    <figcaption>The Plaza, before anyone holds it</figcaption>
+  </figure>
+</div>
+
+<div class="writeup">
+  <aside class="aside" aria-label="Project facts">
+    <dl class="facts">
+      <dt>Status</dt>
+      <dd>Prototype, played on desktop</dd>
+      <dt>Genre</dt>
+      <dd>Isometric action, territory control</dd>
+      <dt>Players</dt>
+      <dd>Solo, or up to eight on one local network</dd>
+      <dt>Engine</dt>
+      <dd>Godot 4.7, GDScript</dd>
+      <dt>Controls</dt>
+      <dd>WASD and mouse, click to move, or a gamepad</dd>
+      <dt>Tests</dt>
+      <dd>13 headless test scripts, including one that runs a real server and a second player</dd>
+    </dl>
+  </aside>
+  <article class="prose">
+<p class="lede">You&rsquo;re a wee pawn with a floating friend, on a paved floor cut into nine areas. Waves of corruption pour out of portals, and every combo you land gets banked into the area you&rsquo;re standing in. Beat that area&rsquo;s best and it&rsquo;s yours.</p>
+<p>A match runs against the clock. When the buzzer goes, whoever holds the most floor wins, and everybody gets an award for something.</p>
+
+<h2>Combos, style and claiming</h2>
+<p>Every hit adds to a combo and fills a style meter that drains on its own, graded from D up to SSS. The higher the grade, the more each hit is worth. Variety is what fills it: repeating the same attack is worth less each time and switching is worth more, so mashing one button sits at D while mixing all six gets you to S.</p>
+<p>The combo belongs to the area it started in. Step over a border, or let the three-second timer run out, and it&rsquo;s scored. If it beats the area&rsquo;s best, the area fills with your colour, its name and score get written on the floor, and its landmark, border, wall eyes and lamp pennants all change to match.</p>
+
+<h2>Six ways to hit things</h2>
+<p>A basic strike you can walk while swinging, a 180&deg; slash, a quake you aim at the floor, a whirlwind, a ward that shields you and calls your friend home, and a spirit bolt, which is your friend himself thrown like a boomerang. Space dashes through anything in the way. Skills can be dragged around the bar, and it all works on a gamepad as a twin stick.</p>
+
+<h2>Corruption</h2>
+<p>Four kinds of enemy, all in the same dark violet, told apart by shape and how they fight. Cinders crowd you in threes, Blocks stomp, Darts circle and dash down a lane, and Hexes hang back and shoot. Every attack follows the same rhythm: stop, paint a warning on the floor, strike, recover. The warnings use the attack&rsquo;s own smear art lying flat on the floor and filling in, so you see the hit before it lands.</p>
+
+<h2>How it&rsquo;s built</h2>
+<ul>
+  <li><strong>Areas are a Voronoi diagram.</strong> Each area has a site, and owns the floor nearer to it than to any other site. Moving a site moves the borders, and the tile-by-tile border inlay follows.</li>
+  <li><strong>Enemies are a state machine plus a brain.</strong> One shared enemy handles state, navigation, separation and taking hits. A small brain per behaviour only steers and decides when to attack. Health, speed and timings live in resources, so tuning doesn&rsquo;t touch code.</li>
+  <li><strong>Multiplayer for friends on a network.</strong> One machine runs the game server and serves the web build over https from the same port, so phones and laptops on the Wi-Fi just open an address and join. The server owns the waves, enemies and the clock.</li>
+  <li><strong>Measured responsiveness.</strong> A latency probe fires the real input events from a second thread and times press to attack, first changed frame, damage and &ldquo;free again&rdquo; for every skill.</li>
+  <li><strong>Lots of headless tests.</strong> Controls in all three schemes, every ability, combos, waves, the Voronoi cutting, the level art, whole matches and a networked game against a bot in another process.</li>
+</ul>
+
+<h2>What it doesn&rsquo;t do yet</h2>
+<ul>
+  <li>The four elements are only colours for now. They all play the same.</li>
+  <li>The pawn and the enemies only have walk loops, so attacks are squash and stretch rather than proper animation.</li>
+  <li>Multiplayer trusts each player about their own hits. It&rsquo;s for friends, not strangers.</li>
+  <li>There&rsquo;s no public build yet.</li>
+</ul>
+  </article>
+</div>
+</main>
+</div>
+</body>
+</html>

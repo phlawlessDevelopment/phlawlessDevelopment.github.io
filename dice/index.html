@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dice: a dice-builder for your phone &ndash; Phlawless Development</title>
+<meta name="description" content="Dice is a dice-builder prototype for Android, made in Godot. Roll for steps across hex floors, roll your stats to fight, and build your dice up with gear and stickers.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dice: a dice-builder for your phone &amp;ndash; Phlawless Development">
+<meta property="og:description" content="Dice is a dice-builder prototype for Android, made in Godot. Roll for steps across hex floors, roll your stats to fight, and build your dice up with gear and stickers.">
+<meta property="og:image" content="https://phlawlessdevelopment.github.io/dice/city-map.webp">
+<link rel="canonical" href="https://phlawlessdevelopment.github.io/dice/">
+<meta name="theme-color" content="#1d2021">
+<link rel="icon" href="/icon.png">
+<link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="shell">
+<header class="rail">
+  <a class="wordmark" href="/">Phlawless<br> Development</a>
+  <div class="who">
+    <p class="name">Louis Hopkins</p>
+    <p class="tag">Software &amp; games.</p>
+  </div>
+  <nav class="rail-nav" aria-label="Site">
+    <a href="/" aria-current="true">Work</a>
+    <a href="/about/">About</a>
+    <a href="https://github.com/phlawlessDevelopment" rel="me noopener">GitHub</a>
+  </nav>
+  <p class="rail-foot">Web / Games / Systems</p>
+</header>
+<main class="main" id="content">
+<header class="page-head project-head">
+  <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>Dice</p>
+  <h1>Dice</h1>
+  <p class="summary">A dice-builder for your phone. Roll to move, roll to fight, and build better dice.</p>
+  <ul class="stack" aria-label="Technologies"><li>Godot</li><li>GDScript</li><li>Android</li></ul>
+</header>
+
+<div class="hero hero-portraits">
+  <figure class="mat">
+    <img src="/dice/city-map.webp" width="554" height="1200" alt="The Dice city map: an illustrated neighbourhood at night with three highlighted missions, Halcyon Tower (2 floors), Copy Works (3 floors) and Night Market (4 floors). The dock at the bottom shows Halcyon Tower's boss, difficulty and reward, with an Enter button." loading="eager">
+    <figcaption>Picking a mission on the city map</figcaption>
+  </figure>
+  <figure class="mat">
+    <img src="/dice/mission.webp" width="554" height="1200" alt="Arriving at Halcyon Tower: an illustration of Relay, a DJ in a varsity jacket, looking up at an office tower in the rain, with a Go In button. The felt dice tray below holds three d6s, a d4, a d20 and two percentile dice." loading="eager">
+    <figcaption>Arriving at Halcyon Tower</figcaption>
+  </figure>
+  <figure class="mat">
+    <img src="/dice/floor.webp" width="554" height="1200" alt="Exploring the tower lobby: a hex map of carpet, tile and wood with desks and server racks, Relay in the middle, and the dice tray below." loading="lazy">
+    <figcaption>The first floor of the lobby</figcaption>
+  </figure>
+</div>
+
+<div class="writeup">
+  <aside class="aside" aria-label="Project facts">
+    <dl class="facts">
+      <dt>Status</dt>
+      <dd>Internal playtest build on Android</dd>
+      <dt>Platform</dt>
+      <dd>Android, portrait, touch first</dd>
+      <dt>Engine</dt>
+      <dd>Godot 4.7, GDScript, Mobile renderer</dd>
+      <dt>Dice</dt>
+      <dd>Real 3D dice, built in code, with 72 street icons painted onto the faces at startup</dd>
+      <dt>Tools</dt>
+      <dd>Headless rule checks, a chi-square test for every die, and a balance sim that plays whole campaigns</dd>
+    </dl>
+  </aside>
+  <article class="prose">
+<p class="lede">Pick a hero, pick a building on the city map, and work your way up its floors to the boss. Everything you do is a roll: the bottom third of the screen is a felt tray full of dice, and you tap or swipe it to throw the lot.</p>
+<p>Beat the boss and you keep everything you found. Get knocked out or give up, and it&rsquo;s gone.</p>
+
+<h2>Exploring</h2>
+<p>Each floor is a hex map under fog. Your movement dice decide how many steps you get, and some faces carry icons that let you vault furniture or cross the atrium. A d20 rides along with them, and every roll that passes without a fight turns another of its numbers into a skull. Roll a skull and a fight starts.</p>
+<p>Percentile dice go first. Roll under your event odds and an event die pops into the tray: loose change, a tip-off, a supply drop, backup. Each one has a little illustrated card and two or three ways to handle it, some needing a stat check.</p>
+<p>Somewhere on every floor is the lift, locked until you&rsquo;ve dealt with whatever&rsquo;s holding it, plus stash cases, vending machines, routers and supply closets to find.</p>
+
+<h2>Fighting</h2>
+<p>In a fight your hand is your six stats, PUNCH, FLOW, GRIT, TECH, SAVVY and HYPE, each a set of dice decided by its rank. Roll them, let your gear&rsquo;s effects re-roll and add dice, then spend the totals on moves. With PUNCH 6 that&rsquo;s a Haymaker, or a Jab and a Strike. The foe&rsquo;s next move is on a card the whole time, so you know what&rsquo;s coming. Bosses change tactics at half health.</p>
+
+<h2>Building your dice</h2>
+<p>Levelling a weak stat takes the fumble faces off its die, and a strong stat gets a second die, then icons on it, then a full second d6. Gear comes in seven sockets and five rarities, and it adds ranks, armour, re-rolls, extra dice, more steps and better finds. Stickers go straight onto faces.</p>
+
+<h2>How it&rsquo;s built</h2>
+<ul>
+  <li><strong>The tray doesn&rsquo;t know the rules.</strong> Dice come in groups, and each game mode reads its results by group, so the map, exploring and combat can each hand the tray whatever dice they need.</li>
+  <li><strong>Procedural dice.</strong> The polyhedra are bevelled meshes made in code. At startup every distinct face gets painted into a texture atlas, and a shader puts the icon and the number on the die. Every roll lands flat on the face it was chosen to show.</li>
+  <li><strong>Rules as plain data.</strong> A combat turn is a plain class with no nodes, so the headless tests step through it directly: effects firing, dice chaining, moves landing.</li>
+  <li><strong>A balance sim.</strong> A bot plays the real fight rules and a rough model of whole campaigns, which is how I know the first boss is a pushover and Redline is the wall.</li>
+</ul>
+  </article>
+</div>
+</main>
+</div>
+</body>
+</html>
