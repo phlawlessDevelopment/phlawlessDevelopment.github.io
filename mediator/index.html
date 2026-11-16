@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mediator: group chat with an AI that calms things down &ndash; Phlawless Development</title>
-<meta name="description" content="Mediator is a group chat with an AI that steps in when people get heated. How it decides when to speak, how it avoids double replies and double bills, and how it&#x27;s deployed.">
+<meta name="description" content="Mediator is a group chat with an AI that keeps quiet until people start getting nasty with each other. Why I made it, how it decides when to step in, and what&#x27;s not done yet.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mediator: group chat with an AI that calms things down &amp;ndash; Phlawless Development">
-<meta property="og:description" content="Mediator is a group chat with an AI that steps in when people get heated. How it decides when to speak, how it avoids double replies and double bills, and how it&#x27;s deployed.">
+<meta property="og:description" content="Mediator is a group chat with an AI that keeps quiet until people start getting nasty with each other. Why I made it, how it decides when to step in, and what&#x27;s not done yet.">
 <meta property="og:image" content="https://phlawlessdevelopment.github.io/mediator/conversation-dark.webp">
 <link rel="canonical" href="https://phlawlessdevelopment.github.io/mediator/">
 <meta name="theme-color" content="#1d2021">
@@ -35,7 +35,7 @@
 <header class="page-head project-head">
   <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>Mediator</p>
   <h1>Mediator</h1>
-  <p class="summary">A group chat with an AI that steps in when people start getting heated.</p>
+  <p class="summary">A group chat with an AI in it that keeps quiet until people start getting nasty with each other.</p>
   <ul class="stack" aria-label="Technologies"><li>Java</li><li>Spring Boot</li><li>WebSocket</li><li>SQLite</li></ul>
   <div class="actions">
     <a class="btn" href="#try-it">Try the demo <span class="arrow" aria-hidden="true">&rarr;</span></a>
@@ -65,95 +65,62 @@
   <aside class="aside" aria-label="Project facts">
     <dl class="facts">
   <dt>Status</dt>
-  <dd>Live demo, up since 2 November 2026. It&rsquo;s a controlled preview, not a finished product.</dd>
+  <dd>Live demo since 2 November 2026, on Oracle Cloud&rsquo;s free tier. It&rsquo;s a preview I&rsquo;m testing with, not a finished product, and it&rsquo;s behind a password at the moment.</dd>
   <dt>Backend</dt>
   <dd>Java 25, Spring Boot 4.1, Spring Security, WebSocket / STOMP, Spring Data, Flyway, SQLite</dd>
   <dt>Frontend</dt>
   <dd>Plain JavaScript modules, no framework, no build step</dd>
   <dt>AI</dt>
-  <dd>TypeSafe Jev scores the messages, OpenAI writes the replies (there&rsquo;s an Anthropic adapter too)</dd>
+  <dd>TypeSafe Jev for scoring, OpenAI for replies (there&rsquo;s an Anthropic adapter too)</dd>
   <dt>Hosting</dt>
-  <dd>Oracle Cloud&rsquo;s Always Free Arm instance (London), Docker Compose, Caddy, Let&rsquo;s Encrypt</dd>
+  <dd>Oracle Cloud Always Free Arm instance (London), Docker Compose, Caddy, Let&rsquo;s Encrypt</dd>
   <dt>Tests</dt>
-  <dd>134 backend, 16 frontend. Every model call is mocked in the suite.</dd>
+  <dd>134 backend, 16 frontend. Every model call is mocked, so running them costs nothing.</dd>
 </dl>
   </aside>
   <article class="prose">
-<p class="meta">Write-up &middot; Last updated 2 November 2026</p>
-<p class="lede">It&rsquo;s a chat app with an AI mediator sitting in every room. It reads along, and when a conversation starts turning nasty it posts one calm, practical message, then backs off for a while.</p>
-<p>The chat side is pretty standard. The interesting bit is everything around the model call, making sure it only ever steps in once, never pays for the same reply twice, can&rsquo;t blow through its budget, and stops sending you messages the moment you leave a room.</p>
+<p class="meta">Write-up &middot; Last updated 16 November 2026</p>
+<p class="lede">I&rsquo;ve wanted to make this for a while. Back in 2024 I had a go at a &ldquo;mediator&rdquo; chatbot in Laravel, using Google&rsquo;s moderation API to decide when it should speak up, and I generated a load of fake arguments between two made-up people (Alyce and Billy) to test it. This is the second attempt, and this time it&rsquo;s actually running somewhere you can use it.</p>
+<p>The idea is pretty simple. It&rsquo;s a normal chat app, rooms, invites, history, messages coming in live, with one extra participant. The mediator reads along, and when someone gets out of line (a personal attack, contempt, passive aggression, putting motives in someone else&rsquo;s mouth etc.) it posts one calm message, then backs off for a while. I wanted it to act like a real mediator or couples counsellor would, so it sticks to what people actually said, suggests one practical next step and asks one question at most. It&rsquo;s always labelled as <strong>Mediator &middot; AI facilitator</strong>, it&rsquo;s not pretending to be a person.</p>
 
 <div class="notice" id="try-it">
   <h3>Before you try the demo</h3>
   <ul>
-    <li>Sign-up is open. Use a throwaway username and a password you don&rsquo;t use anywhere else (12 characters or more).</li>
-    <li>Don&rsquo;t post anything private. Messages are stored unencrypted in the demo database, there&rsquo;s no password reset or account deletion in the app yet, and I&rsquo;m not promising to keep anything.</li>
+    <li>It&rsquo;s behind a password at the moment, so <a href="mailto:phlawless.games@gmail.com">email me</a> if you want a go.</li>
+    <li>Use a throwaway username and a password you don&rsquo;t use anywhere else (12 characters or more).</li>
+    <li>Don&rsquo;t post anything private. Messages are stored unencrypted, there&rsquo;s no password reset or account deletion in the app yet, and I&rsquo;m not promising to keep anything.</li>
     <li>While a room is calm, each message, the sender&rsquo;s username and a few earlier messages get sent to TypeSafe to be scored. If a room gets flagged, the message that set it off and up to 12 earlier ones go to OpenAI to write the reply.</li>
-    <li>AI calls run on a fixed allowance. Once that&rsquo;s used up, chat still works but the mediator goes quiet.</li>
+    <li>The AI calls run on a fixed allowance. Once that&rsquo;s used up, chat still works but the mediator goes quiet.</li>
     <li>To see it do its thing, make a room and post something heated. One account is enough, but it works off thresholds, so mild stuff won&rsquo;t set it off.</li>
   </ul>
   <p class="cta"><a class="button" href="https://phlawless-games.duckdns.org/" rel="noopener" target="_blank">Open the live demo <span aria-hidden="true">&nearr;</span><span class="sr-only">(opens in a new tab)</span></a></p>
 </div>
 
-<h2>What it does</h2>
-<p>You sign up, make rooms and invite people by username. Rooms are invite-only, so you don&rsquo;t see anything until you accept. Messages are saved, so the history survives a refresh, and new ones come in live over a WebSocket. There&rsquo;s a searchable conversation list, light and dark themes, a draft per room and keyboard shortcuts.</p>
-<p>The twist is the extra participant. When a conversation escalates, a message labelled <strong>Mediator &middot; AI facilitator</strong> shows up in the room. It sticks to what people actually said, suggests one practical next step and asks one question at most. It&rsquo;s stored and delivered like any other message, but it&rsquo;s always clearly marked as automated.</p>
+<h2>How it decides when to step in</h2>
+<p>Getting a model to write a calm reply is honestly the easy part. The hard part is everything around it, making sure it only steps in once, never pays for the same reply twice, can&rsquo;t burn through my API budget, and stops sending you messages the moment you leave a room.</p>
+<p>When you send a message it gets saved first, and the checking happens afterwards, so sending a message never waits on an AI call. The message (plus a few earlier ones for context) goes to TypeSafe&rsquo;s Jev, which scores seven separate signals, personal attack, contempt, passive aggression, dismissiveness, motive attribution, inflammatory wording and retaliation, plus an overall hostility score.</p>
+<p>Jev only scores, it doesn&rsquo;t decide anything. Our own code takes those scores and puts the room into one of four states, clear, borderline, trigger or unavailable. Two borderline messages close together (within the last six) also count as a trigger, since people are often snippy before they&rsquo;re outright rude. If Jev is down the room just counts as unavailable and chat carries on like nothing happened.</p>
+<p>On a trigger, the room flips from calm to &ldquo;mediating&rdquo; in a single database update, and only whoever actually made that change gets to ask for a reply. So if two people kick off at the same time you still get exactly one intervention, not two. The reply is written by OpenAI (there&rsquo;s an Anthropic adapter too), outside of any database transaction so the rest of the chat stays responsive, and the model has no tools and can&rsquo;t see any other rooms. Once the reply is posted the room goes into a cooldown, and the mediator&rsquo;s own messages never get scored, so it can&rsquo;t set itself off.</p>
 
-<h2>How a message turns into an intervention</h2>
-<ol class="flow">
-  <li><strong>Save, then announce.</strong> The message gets committed and an event is published. Scoring runs asynchronously <em>after</em> the commit, so sending a message never waits on an AI call.</li>
-  <li><strong>Score.</strong> The classifier sends the message and a few earlier ones to TypeSafe&rsquo;s Jev, which rates seven separate signals (personal attack, contempt, passive aggression, dismissiveness, motive attribution, inflammatory wording, retaliation) plus a four-level hostility score. The history window stops at the reviewed message&rsquo;s own timestamp and ID, so a job sitting in the queue can&rsquo;t peek at later messages.</li>
-  <li><strong>Decide in our own code.</strong> Jev only scores, it doesn&rsquo;t decide anything. A policy class combines the signals with thresholds and weights into <code>CLEAR</code>, <code>BORDERLINE</code>, <code>TRIGGER</code> or <code>UNAVAILABLE</code>. Two borderline results within a room&rsquo;s last six scored messages also count as a trigger. If the classifier fails it&rsquo;s <code>UNAVAILABLE</code> and chat carries on.</li>
-  <li><strong>Claim the room.</strong> On a trigger, one conditional SQL <code>UPDATE</code> moves the room from <code>CALM</code> to <code>MEDIATING</code>. Only the caller that actually changed a row publishes the request, so if two triggers land at once you still get exactly one intervention.</li>
-  <li><strong>Generate, outside any transaction.</strong> A bounded worker claims the saved request with a token, loads the context and calls the model. Nothing holds the database during the call, so the rest of the chat stays responsive. The conversation goes in as data, separate from the instructions, and the model has no tools and can&rsquo;t see other rooms.</li>
-  <li><strong>Publish, then cool down.</strong> Storing the mediator&rsquo;s message and starting the room&rsquo;s cooldown happen in one atomic step, and the message only gets broadcast after that commits. Automated messages are never scored, so the mediator can&rsquo;t set itself off.</li>
-</ol>
-
-<h2>The decisions behind it</h2>
-<div class="decisions">
-
-<h3>Better to miss a reply than pay for one twice</h3>
-<p>If the process dies mid-request, anything nobody had claimed yet gets resubmitted, but a claimed request is left to expire instead of being generated again. Finishing a request has to match the room, the trigger ID and the claim token, so a slow or stale worker can&rsquo;t post into a newer session. Anything older than 60 seconds expires into cooldown, and a message sent before the last cooldown ended can&rsquo;t instantly re-trigger the room.</p>
-
-<h3>A spending cap that lives in the database</h3>
-<p>Every external call reserves from a saved allowance (by default 100 classifications and 20 replies per provider) before it touches the network, and failed calls still count. The counters survive restarts. Once it&rsquo;s spent, chat is fine and the mediator just goes quiet. It&rsquo;s a cap on requests, not on money, and the docs say so.</p>
-
-<h3>Checking permissions where the data actually goes</h3>
-<p>Membership is checked on REST calls and on every STOMP subscribe and send. Delivery also rechecks the recipient&rsquo;s current session and membership, so leaving a room or logging out cuts off a socket that&rsquo;s already open. The release audit caught the first version still delivering messages after someone had left. There&rsquo;s now an end-to-end test for that over a real HTTP and WebSocket connection.</p>
-
-<h3>SQLite with one writer, on purpose</h3>
-<p>One connection, WAL mode, and a schema owned by Flyway migrations and checked at startup. Keeping model calls out of transactions is what lets a single connection handle a live chat. It&rsquo;s single-instance by choice. Scaling out would mean PostgreSQL and a proper message broker, and the docs say that too.</p>
-
-<h3>Swappable providers that fail quietly</h3>
-<p>The classifier sits behind an interface with a do-nothing fallback, so the app runs without any API keys at all. The OpenAI and Anthropic adapters are thin HTTP clients with a timeout, an output cap, a response-size cap and no automatic retries. Any provider failure turns into a plain system notice and a cooldown. Raw provider errors never get logged or shown to anyone.</p>
-
-</div>
-
-<h2>Security and running it</h2>
-<ul>
-  <li><strong>The app:</strong> server-side sessions, BCrypt passwords, CSRF protection on HTTP and on the STOMP connect frame, a content security policy and the related headers, size limits on request bodies, rate limits per IP and per user, and caps on connections and subscriptions.</li>
-  <li><strong>The container:</strong> runs as a non-root user with a read-only filesystem and dropped capabilities. Only the Caddy proxy is reachable from the internet, and SSH only accepts my IP.</li>
-  <li><strong>Images:</strong> scanned with Trivy. The official Caddy image had nine fixable high or critical findings, so the proxy gets rebuilt on a patched Go toolchain and libraries, and that one scans clean.</li>
-  <li><strong>Backups:</strong> a nightly online SQLite backup, integrity-checked, encrypted to a public certificate and uploaded to private object storage. The server&rsquo;s credentials can add backups but can&rsquo;t read or delete them, so a compromised server can&rsquo;t wipe its own history. The decryption key isn&rsquo;t on the server. A restore into a separate copy has been tested.</li>
-</ul>
+<h2>The decisions I care about</h2>
+<p><strong>I&rsquo;d rather miss a reply than pay for one twice.</strong> If the server dies halfway through, anything nobody had picked up yet gets retried, but a request that was already being worked on is left to expire rather than generated again. Anything older than 60 seconds just expires into the cooldown.</p>
+<p><strong>The spending cap lives in the database.</strong> Every external call reserves from a saved allowance before it goes anywhere (by default 100 classifications and 20 replies per provider), failed calls still count, and the counters survive a restart. When it runs out, chat still works and the mediator goes quiet. It&rsquo;s a cap on requests, not on money, so it&rsquo;s not perfect, but it means a bug can&rsquo;t run up a bill while I&rsquo;m asleep.</p>
+<p><strong>Permissions get checked where the data actually goes.</strong> That&rsquo;s the API, every WebSocket subscribe and send, and again on delivery. The release audit caught the first version still delivering messages to someone who&rsquo;d left the room, which is exactly the kind of thing you&rsquo;d never notice clicking around yourself. There&rsquo;s now an end-to-end test for it over a real connection.</p>
+<p><strong>SQLite, one writer, on purpose.</strong> This is a small thing running on a free box, I don&rsquo;t need PostgreSQL and a message broker for it. Keeping the model calls out of transactions is what lets a single connection handle a live chat fine. If it ever needed to scale out, that&rsquo;s when it&rsquo;d change.</p>
 
 <h2>A bug that only showed up on the real server</h2>
-<p>All the tests were green, but the container had never actually been run. On the Oracle box it crash-looped on startup. Docker mounts <code>tmpfs</code> with <code>noexec</code> by default, and the SQLite JDBC driver unpacks a native library at startup that has to be executable. The fix was a small dedicated <code>tmpfs</code> that allows execution, owned by the app user and only used by the driver, so <code>/tmp</code> stays locked down. It&rsquo;s been checked across a restart and a full container recreate.</p>
+<p>All the tests were green, but the container had never actually been run anywhere real. On the Oracle box it crash-looped on startup. Docker mounts <code>tmpfs</code> with <code>noexec</code> by default, and the SQLite driver unpacks a native library at startup that needs to be executable. The fix was a wee dedicated <code>tmpfs</code> that allows execution, only used by the driver, so <code>/tmp</code> stays locked down. Pretty good reminder that &ldquo;the tests pass&rdquo; and &ldquo;it runs&rdquo; are two different things.</p>
 
-<h2>How it&rsquo;s tested</h2>
-<ul>
-  <li><strong>134 backend tests</strong> cover the API and CSRF, validation, membership, invites, history bounds, the policy, atomic transitions, concurrent workers, timeouts and restart recovery, late replies and provider contracts. One end-to-end test sends a message and follows it through the trigger and a fake async model all the way to live delivery, while another user&rsquo;s message lands mid-generation.</li>
-  <li><strong>16 frontend tests</strong> run on Node&rsquo;s built-in test runner, no dependencies. They cover reconnects, stale callbacks, message ordering and de-duplication, the AI label, and making sure model output gets rendered as text, not HTML.</li>
-  <li><strong>Against the live server:</strong> a script of about twenty checks covers anonymous and CSRF rejection, cookie flags, what an uninvited account can get at, live WebSocket delivery, persistence and revocation. Another run did a real classification and reply, and the intervention reached the other members in two to three seconds.</li>
-  <li><strong>Dependencies:</strong> the Maven runtime packages and the vendored STOMP bundle were checked against the OSV advisory database, and the container images were scanned.</li>
-</ul>
+<h2>Security and hosting</h2>
+<p>Server-side sessions, BCrypt passwords, CSRF protection (including on the WebSocket connect), a content security policy, size limits and rate limits per IP and per user. The container runs as a non-root user on a read-only filesystem, and only the Caddy proxy is reachable from the internet. The official Caddy image had nine fixable high / critical findings in Trivy, so the proxy gets rebuilt on patched libraries and that one scans clean.</p>
+<p>Backups run nightly, get integrity-checked, encrypted and uploaded to private storage. The server can add backups but can&rsquo;t read or delete them, so if someone got into the box they couldn&rsquo;t wipe its history, and the decryption key isn&rsquo;t on it. I&rsquo;ve tested a restore into a separate copy.</p>
+
+<h2>Tests</h2>
+<p>134 backend tests and 16 frontend ones (on Node&rsquo;s built-in test runner, no dependencies). Every model call is mocked in the suite, so running the tests costs nothing. On top of that there&rsquo;s a script of about twenty checks against the live server, and a real run where the mediator&rsquo;s message reached the other people in the room in two to three seconds.</p>
 
 <h2>What it doesn&rsquo;t do yet</h2>
-<ul>
-  <li><strong>Reply quality isn&rsquo;t properly measured.</strong> What&rsquo;s been verified is the plumbing and the lifecycle. The replies I&rsquo;ve seen read as neutral and specific, but that&rsquo;s me eyeballing them, not a measurement. There&rsquo;s a labelled dataset of expected outcomes in the repo that isn&rsquo;t wired into the tests yet, and that&rsquo;s next.</li>
-  <li><strong>It&rsquo;s one instance.</strong> The in-process message broker and SQLite are a deliberate trade-off for something this small.</li>
-  <li><strong>It&rsquo;s not a finished product.</strong> Conversations are stored in plaintext, and there&rsquo;s no password recovery, email verification, account deletion or moderation tooling yet.</li>
-</ul>
+<p>The replies aren&rsquo;t properly measured. What I&rsquo;ve verified is the plumbing, the replies I&rsquo;ve seen read as neutral and specific, but that&rsquo;s me eyeballing them, not a real measurement. There&rsquo;s a labelled set of expected outcomes in the repo that isn&rsquo;t wired into the tests yet, and that&rsquo;s next.</p>
+<p>It&rsquo;s also not a finished product. Messages are stored unencrypted, and there&rsquo;s no password reset, email verification, account deletion or moderation tools yet.</p>
   </article>
 </div>
 </main>
