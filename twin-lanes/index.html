@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Twin Lanes: a two-column tactical card battler &ndash; Phlawless Development</title>
+<meta name="description" content="Twin Lanes is a card battler for Android made in Godot. Units fight in five lanes and step between a basic and a special column, and every card's numbers come out of an AI-versus-AI balance sim.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Twin Lanes: a two-column tactical card battler &amp;ndash; Phlawless Development">
+<meta property="og:description" content="Twin Lanes is a card battler for Android made in Godot. Units fight in five lanes and step between a basic and a special column, and every card's numbers come out of an AI-versus-AI balance sim.">
+<meta property="og:image" content="https://phlawlessdevelopment.github.io/twin-lanes/board.webp">
+<link rel="canonical" href="https://phlawlessdevelopment.github.io/twin-lanes/">
+<meta name="theme-color" content="#1d2021">
+<link rel="icon" href="/icon.png">
+<link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="shell">
+<header class="rail">
+  <a class="wordmark" href="/">Phlawless<br> Development</a>
+  <div class="who">
+    <p class="name">Louis Hopkins</p>
+    <p class="tag">Software &amp; games.</p>
+  </div>
+  <nav class="rail-nav" aria-label="Site">
+    <a href="/" aria-current="true">Work</a>
+    <a href="/about/">About</a>
+    <a href="https://github.com/phlawlessDevelopment" rel="me noopener">GitHub</a>
+  </nav>
+  <p class="rail-foot">Web / Games / Systems</p>
+</header>
+<main class="main" id="content">
+<header class="page-head project-head">
+  <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>Twin Lanes</p>
+  <h1>Twin Lanes</h1>
+  <p class="summary">A card battler for your phone where units take turns stepping out to fire their big attack.</p>
+  <ul class="stack" aria-label="Technologies"><li>Godot</li><li>GDScript</li><li>Android</li></ul>
+</header>
+
+<div class="hero hero-portraits">
+  <figure class="mat">
+    <img src="/twin-lanes/menu.webp" width="720" height="1280" alt="The Twin Lanes title screen: a knight on horseback faces a blue crystal golem under the logo, with Adventure and Daily Seed marked coming soon, Single Match highlighted, and Deck Builder and How To Play buttons." loading="eager">
+    <figcaption>The title screen</figcaption>
+  </figure>
+  <figure class="mat">
+    <img src="/twin-lanes/board.webp" width="720" height="1280" alt="A match in round 4 with the enemy attacking: five lanes of pixel-art units, wolves and a blue knight on the player's side, orcs and an ogre on the enemy's, each with health and cooldown pips, and the player's health and mana along the bottom." loading="eager">
+    <figcaption>Round 4, the enemy holds the attack</figcaption>
+  </figure>
+  <figure class="mat">
+    <img src="/twin-lanes/hand.webp" width="720" height="1280" alt="An empty board at the start of a match with a fanned hand of ten cards along the bottom, one card lifted to read its stats and text." loading="lazy">
+    <figcaption>A full hand of ten</figcaption>
+  </figure>
+</div>
+
+<div class="writeup">
+  <aside class="aside" aria-label="Project facts">
+    <dl class="facts">
+      <dt>Status</dt>
+      <dd>Prototype, Single Match is playable against the AI</dd>
+      <dt>Platform</dt>
+      <dd>Android, portrait, touch first</dd>
+      <dt>Engine</dt>
+      <dd>Godot 4.7, GDScript</dd>
+      <dt>Cards</dt>
+      <dd>138 designed across five factions, with art for four more</dd>
+      <dt>Tools</dt>
+      <dd>A headless deck sim that plays the real engine AI against AI, and 31 test scripts</dd>
+    </dl>
+  </aside>
+  <article class="prose">
+<p class="lede">Each side has five lanes, and every lane has two columns. You drag a unit into the basic column, where it chips away with its basic attack. Every few attacks it steps out to the special column and fires something much bigger, then comes back to the front and starts again.</p>
+<p>Attacks hit every unit in the lane, front and back, and an empty lane means the hit goes to the player. Get the enemy&rsquo;s health to zero and you win.</p>
+
+<h2>Rounds, a bit like Legends of Runeterra</h2>
+<p>One side holds the attack each round, and it swaps every round. The two sides take turns playing one card or passing. Two passes in a row ends the round, and only the attacker&rsquo;s units strike. That means the defender always gets to answer the attacker&rsquo;s last play.</p>
+
+<h2>No free mana</h2>
+<p>Mana starts at zero and nothing raises it on its own. Once a round you can sacrifice a card from your hand: shuffle it back into the deck for one mana, or throw it away for mana equal to its cost (three at most). The gain is permanent, so the first few turns are all about which cards you&rsquo;re willing to give up.</p>
+
+<h2>Balanced by simulation, not by feel</h2>
+<p>Every card&rsquo;s numbers come from a sim that plays the real engine AI against AI, hundreds of games per test. A few things it turned up:</p>
+<ul>
+  <li><strong>A card&rsquo;s strength is its health times its damage per round.</strong> Adding to one or the other plays out the same in proportion, so the two multiply. The first formula added them, and that over-paid the walls and the glass cannons.</li>
+  <li><strong>The cost curve is steep.</strong> You only draw one card a turn, so cards are scarcer than mana, and a bigger card is just a better card once you can pay for it. A card 10% under par loses about three games in four.</li>
+  <li><strong>Every new card gets a swap test.</strong> Three copies go into a plain deck in place of a card of the same cost, and it plays the original deck. Fifty percent is fair for its cost.</li>
+  <li><strong>The rule changes were measured too.</strong> When the sacrifice economy and the attack rounds came in, the sim re-ran a round-robin of 23 decks. Aggro fell from about 45% to under 25%, and the numbers say so rather than me guessing.</li>
+</ul>
+
+<h2>Cards with words on them</h2>
+<p>Most cards carry rules text, and only a handful per faction are plain stat lines. The engine has triggers for attacking, killing, getting hurt, an ally dying and you sacrificing, plus Blast, Pierce, Stealth, buffs, bounces and summons. Every keyword has a glossary entry you can read by holding a card.</p>
+
+<h2>What it doesn&rsquo;t do yet</h2>
+<ul>
+  <li>Only Single Match is playable. Adventure and Daily Seed are on the menu as coming soon.</li>
+  <li>Four of the nine factions have art but no designed cards yet.</li>
+  <li>There&rsquo;s no public build.</li>
+</ul>
+  </article>
+</div>
+</main>
+</div>
+</body>
+</html>
