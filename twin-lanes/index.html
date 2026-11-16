@@ -70,26 +70,28 @@
     </dl>
   </aside>
   <article class="prose">
-<p class="lede">Each side has five lanes, and every lane has two columns. You drag a unit into the basic column, where it chips away with its basic attack. Every few attacks it steps out to the special column and fires something much bigger, then comes back to the front and starts again.</p>
-<p>Attacks hit every unit in the lane, front and back, and an empty lane means the hit goes to the player. Get the enemy&rsquo;s health to zero and you win.</p>
+<p class="lede">I&rsquo;m a big fan of digital card games, and it feels like they all eventually die (the most recent one for me was Legends of Runeterra). Twin Lanes is my go at one, inspired mostly by Astral Heroes, Astral Masters and Spectromancer. It started on 25 October with a pile of about 800 fantasy sprite sheets, each with an idle, a basic attack and a special attack, and the main mechanic is pretty much built around that.</p>
+<p>Each side has five lanes, and every lane has two columns. You drag a unit into the basic column, where it chips away with its basic attack. Every few attacks it steps out to the special column and fires something much bigger, then comes back to the front and starts again. Attacks hit every unit in the lane, front and back, and an empty lane means the hit goes to the player. Get the enemy&rsquo;s health to zero and you win.</p>
 
-<h2>Rounds, a bit like Legends of Runeterra</h2>
-<p>One side holds the attack each round, and it swaps every round. The two sides take turns playing one card or passing. Two passes in a row ends the round, and only the attacker&rsquo;s units strike. That means the defender always gets to answer the attacker&rsquo;s last play.</p>
+<h2>How a round works</h2>
+<p>The first version had plain turns, and I swapped that for something closer to Legends of Runeterra. One side holds the attack each round and it swaps every round. The two sides take turns playing one card or passing, two passes in a row ends the round, and only the attacker&rsquo;s units strike. That means the defender always gets to answer the attacker&rsquo;s last play.</p>
 
-<h2>No free mana</h2>
-<p>Mana starts at zero and nothing raises it on its own. Once a round you can sacrifice a card from your hand: shuffle it back into the deck for one mana, or throw it away for mana equal to its cost (three at most). The gain is permanent, so the first few turns are all about which cards you&rsquo;re willing to give up.</p>
+<h2>Mana</h2>
+<p>The first mana system made it a lot less fun than I expected, so I went back to what Astral Heroes does, where you sacrifice a card each turn for mana. Mana starts at zero and nothing raises it on its own. Once a round you can sacrifice a card from your hand, either shuffle it back into the deck for one mana, or throw it away for mana equal to its cost. The gain is permanent, so the first few turns are all about which cards you&rsquo;re willing to give up.</p>
+<p>The first version of that let some decks get a load of mana really early, so I tried half the cost (rounded down), then went with the full cost capped at three. That&rsquo;s the number I&rsquo;m testing with for now. The point is to slow games down while still letting you pay a card from your hand for a bit of extra mana.</p>
 
-<h2>Balanced by simulation, not by feel</h2>
-<p>Every card&rsquo;s numbers come from a sim that plays the real engine AI against AI, hundreds of games per test. A few things it turned up:</p>
+<h2>Cards</h2>
+<p>The first card I designed was the Ballista Operator. Its basic attack is &ldquo;reload&rdquo;, which does nothing, and its special fires the reloaded shot. It&rsquo;s a pretty novel card made almost entirely from mechanics we already had, and it became the example in the doc agents follow when they design new cards. Reload was basically the first keyword, then Stealth, Blast, Pierce, buffs, bounces and summons came after it.</p>
+<p>I wanted most cards to have writing on them, closer to Hearthstone than a list of stat lines, so only a handful per faction are plain stats. The engine has triggers for attacking, killing, getting hurt, an ally dying and you sacrificing, and every keyword has a glossary entry you can read by holding a card. Decks are capped at two factions.</p>
+
+<h2>Balancing it</h2>
+<p>Every card&rsquo;s numbers come from a sim that plays the real engine, AI against AI, hundreds of games per test. A few things it turned up:</p>
 <ul>
-  <li><strong>A card&rsquo;s strength is its health times its damage per round.</strong> Adding to one or the other plays out the same in proportion, so the two multiply. The first formula added them, and that over-paid the walls and the glass cannons.</li>
-  <li><strong>The cost curve is steep.</strong> You only draw one card a turn, so cards are scarcer than mana, and a bigger card is just a better card once you can pay for it. A card 10% under par loses about three games in four.</li>
-  <li><strong>Every new card gets a swap test.</strong> Three copies go into a plain deck in place of a card of the same cost, and it plays the original deck. Fifty percent is fair for its cost.</li>
-  <li><strong>The rule changes were measured too.</strong> When the sacrifice economy and the attack rounds came in, the sim re-ran a round-robin of 23 decks. Aggro fell from about 45% to under 25%, and the numbers say so rather than me guessing.</li>
+  <li>A card&rsquo;s strength is its health times its damage per round. Adding to either one plays out the same in proportion, so they multiply. The first formula added them, and that over-paid the walls and the glass cannons.</li>
+  <li>The cost curve is steep. You only draw one card a turn, so cards are scarcer than mana, and a bigger card is just a better card once you can pay for it. A card 10% under par loses about three games in four.</li>
+  <li>Every new card gets a swap test. Three copies go into a plain deck in place of a card of the same cost, and it plays the original deck. Fifty percent means it&rsquo;s fair for its cost.</li>
+  <li>The rule changes got measured too. When the sacrifice economy and the attack rounds came in, the sim re-ran a round-robin of 23 decks, and aggro fell from about 45% to under 25%. That&rsquo;s the sim saying so, not me guessing.</li>
 </ul>
-
-<h2>Cards with words on them</h2>
-<p>Most cards carry rules text, and only a handful per faction are plain stat lines. The engine has triggers for attacking, killing, getting hurt, an ally dying and you sacrificing, plus Blast, Pierce, Stealth, buffs, bounces and summons. Every keyword has a glossary entry you can read by holding a card.</p>
 
 <h2>What it doesn&rsquo;t do yet</h2>
 <ul>

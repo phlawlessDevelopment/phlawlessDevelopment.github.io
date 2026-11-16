@@ -79,36 +79,28 @@
     </dl>
   </aside>
   <article class="prose">
-<p class="lede">It&rsquo;s an autochess game, the same genre as TFT and Dota Underlords, made for a phone you&rsquo;re holding in one hand. You buy units, merge three copies into a stronger one, put them on a hex board, press GO and watch them fight it out without you.</p>
-<p>A run is 30 rounds and you get five hearts. Lose them all and that&rsquo;s the run over.</p>
+<p class="lede">I wanted to make an autochess game that doesn&rsquo;t need a proper real-time game server. Most autobattlers (eg. Once Upon a Galaxy) already do async multiplayer, where you fight a snapshot of somebody else&rsquo;s team, but the autochess ones like TFT and Dota Underlords are all real-time lobbies, and I wanted this to be as close to free to run as I could get it. I also wanted it in portrait, because I don&rsquo;t want to rotate my phone.</p>
+<p>So it&rsquo;s autochess for a phone you&rsquo;re holding in one hand. You buy units, merge three copies into a stronger one, put them on a hex board, press GO and watch them fight it out without you. A run is 30 rounds and you get five hearts, lose them all and that&rsquo;s the run over.</p>
 
-<h2>The game</h2>
-<p>Each run follows a set plan of shop, gold, item and arena rounds across three tiers. You buy units in the shop with gold, and holding on to gold earns you interest. Three matching copies merge into a stronger star, up to three stars. Your player level decides how many units you can field, from two up to nine.</p>
-<p>Combat&rsquo;s automatic. Units go for the nearest enemy, move hex by hex, attack, build mana and cast their abilities. Traits reward you for fielding units that share an origin or class, items get forged from components that drop in monster rounds, and every unit has one of eight elements that&rsquo;s strong or weak against others.</p>
-<p>Arena rounds are asynchronous PvP, an idea I borrowed from the arena in Warhammer 40,000: Tacticus. You fight a board another player actually built at the same point in their run, and whatever you field gets saved for someone else to run into later.</p>
+<h2>How a run goes</h2>
+<p>Each run follows a set plan of shop, gold, item and arena rounds across three tiers. You buy units with gold, and holding on to gold earns you interest. Three matching copies merge into a stronger star, up to three stars, and your player level decides how many units you can field, from two up to nine. Combat&rsquo;s automatic, units go for the nearest enemy, move hex by hex, attack, build mana and cast their abilities. Traits reward you for fielding units that share an origin or class, items get forged from components that drop in monster rounds, and every unit has one of eight elements that&rsquo;s strong or weak against others.</p>
+<p>Arena rounds are where the async bit comes in, and the idea is borrowed from the arena in Warhammer 40,000: Tacticus. You fight a board another player actually built at the same point in their run, and whatever you field gets saved for someone else to run into later. It plays like PvP, but nobody has to be online at the same time as you.</p>
 
-<h2>Made for one thumb</h2>
-<p>Everything&rsquo;s a drag. Drag an offer onto the bench to buy it, drag it back up to sell, drag onto the board to deploy or shuffle things around. Long press any unit for its full detail card, enemies too, even mid-fight. A tap never buys, sells or deploys anything by accident, so there are no &ldquo;are you sure?&rdquo; popups slowing the run down.</p>
+<h2>One thumb</h2>
+<p>Everything&rsquo;s a drag. Drag an offer onto the bench to buy it, drag it back up to sell, drag onto the board to deploy or shuffle things around. Long press any unit for its full detail card, enemies too, even mid-fight. A tap never buys, sells or deploys anything, so there are no &ldquo;are you sure?&rdquo; popups slowing the run down.</p>
 
-<h2>Under the hood</h2>
-
-<h3>Combat with no dice</h3>
-<p>The board is 35 pointy-top hexes. Combat runs in 50&nbsp;ms integer ticks with no randomness at all. Ties break by actor ID, and crits fill a meter instead of rolling. The same two boards always give the same fight, which makes balance testing and bug reports reproducible. A headless simulator spits out win rates per unit, trait breakpoint and item.</p>
-
-<h3>A whole board in about 19 bytes</h3>
-<p>Arena boards get bit-packed into a canonical byte string, usually around 19 bytes (the JSON version I started with was roughly 680). Those bytes are the board&rsquo;s identity and the server&rsquo;s de-dupe key, no hashing needed. They don&rsquo;t carry any account or device ID. The unit and item ID tables are append-only, so a new season can add units without breaking any board that&rsquo;s already stored.</p>
-
-<h3>Content comes out of scripts</h3>
-<p>Units, abilities, traits, items and monster packs all come out of generator scripts that own their output, so a balance change happens in one place and gets re-run. The in-game rules pages read their numbers straight from the game&rsquo;s own constants, so they can&rsquo;t drift out of date.</p>
-
-<h3>A small backend</h3>
-<p>A Cloudflare Worker with a Turso database stores anonymous arena boards and remembers the ad-free purchase against a keyed hash of your Google account ID. Purchases get checked with Google instead of trusted from the phone. If the server&rsquo;s down, the game falls back to boards bundled with it and carries on. The <a href="/autochess/privacy/">privacy policy</a> says exactly what leaves your phone.</p>
+<h2>How it works</h2>
+<p>Combat has no randomness in it at all. The board is 35 pointy-top hexes, fights run in 50&nbsp;ms integer ticks, ties break by actor ID and crits fill a meter instead of rolling. The same two boards always give the same fight, which makes bug reports reproducible and means a headless simulator can spit out win rates per unit, trait breakpoint and item.</p>
+<p>Because the arena stores other people&rsquo;s boards, I wanted them tiny. A board gets bit-packed into a canonical byte string, usually around 19 bytes (the JSON version I started with was roughly 680). Those bytes are the board&rsquo;s identity and the server&rsquo;s de-dupe key, so there&rsquo;s no hashing, and they don&rsquo;t carry any account or device ID. The unit and item ID tables are append-only, so a new season can add units without breaking any board that&rsquo;s already stored.</p>
+<p>The backend is pretty small, a Cloudflare Worker and a Turso database. It stores anonymous arena boards and remembers the ad-free purchase against a keyed hash of your Google account ID, and purchases get checked with Google rather than trusted from the phone. If the server&rsquo;s down the game falls back to boards bundled with it and carries on. The <a href="/autochess/privacy/">privacy policy</a> says exactly what leaves your phone.</p>
+<p>Units, abilities, traits, items and monster packs all come out of generator scripts, so a balance change happens in one place and gets re-run, and the in-game rules pages read their numbers straight from the game&rsquo;s own constants so they can&rsquo;t drift out of date.</p>
 
 <h2>How it got made</h2>
-<p>I started it on 5 September 2026 with a long brief in OpenCode, asking for a plan and no code. Agents wrote nearly all of it, first in OpenCode (mostly on free models after the first few days), then in Claude Code from October. Every sprite came out of ChatGPT on my $20 plan. The real bugs all came from playing it on my phone, since the agents never hold one.</p>
+<p>I started on 5 September 2026. I worked the first brief out with ChatGPT, gave it to OpenCode and asked for a plan and no code. That first night cost $34 on an expensive model, which turned out to be about half of everything OpenCode ever spent on the project, and most of what came after was written by free models over the next five weeks. On 12 October I moved to Claude Code, mostly after watching Theo talk about how good value the plans are next to API pricing (which is what I&rsquo;d mostly been paying), and went straight into a UI redesign. Every sprite came out of ChatGPT on my $20 plan.</p>
+<p>A fair bit got thrown away along the way. At one point there was a whole accessories system, hats and wings and glasses you could put on units. A few looked great (the ranger cap and the demon wings) but loads of them didn&rsquo;t fit anyone&rsquo;s face, so I took it all out. I changed my mind about money too, the first plan had in-app purchases, now it&rsquo;s free with ads or you pay once to get rid of them. The real bugs all came from playing it on my phone, since the agents never hold one.</p>
 
 <h2>Where it&rsquo;s at</h2>
-<p>It&rsquo;s in closed testing on Google Play right now. The November season, The Wild Hunt, adds six mounted units to the 57-unit core roster.</p>
+<p>It&rsquo;s in closed testing on Google Play right now. That meant the $25 developer account, plus a tester service, because Google wants a bunch of testers before you can launch and I don&rsquo;t think I have 12 mates. The November season, The Wild Hunt, adds six mounted units to the 57-unit core roster.</p>
   </article>
 </div>
 </main>

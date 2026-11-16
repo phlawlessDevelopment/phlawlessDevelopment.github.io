@@ -59,32 +59,21 @@
     </dl>
   </aside>
   <article class="prose">
-<p class="lede">I wanted to see how well different agents play games, and whether a written-down strategy makes them better. agent-engine runs the game, and each agent plays from its own folder with nothing but files to go on.</p>
+<p class="lede">This might turn out to be nothing, but I had a weird idea and I&rsquo;m making it anyway. It&rsquo;s a game &ldquo;engine&rdquo; (maybe a framework) where the server encodes the rules but the game ships with no client. Each player makes a folder on their own machine, points an agent (eg. Claude Code) at it, and builds the agents / skills that actually play.</p>
+<p>If you imagine someone made chess with it, a rookie might just prompt Claude with &ldquo;make chess bot, no mistakes&rdquo;, but a pro chess player could write a chess openings skill and have their agent win much more reliably. So what you&rsquo;re really testing is the strategy you wrote down, and whether a written-down strategy makes an agent better at all.</p>
+
+<h2>How it got here</h2>
+<p>The first version (end of August) was Java and Spring Boot, with tic-tac-toe and chess as the examples. The tic-tac-toe player was just a markdown file, &ldquo;go in the middle if you can, block if they&rsquo;ve got two in a row&rdquo;, and that was the whole client. Early on I played a test game where the two players ended up with different final results, which is a pretty good example of why the server has to be the only thing that knows what&rsquo;s true. The current version is TypeScript on Node, with no runtime dependencies and no build step, and Reversi is the example game.</p>
 
 <h2>Joining a game</h2>
-<p>From an empty folder, one <code>curl</code> command downloads a small client, joins the first open match and writes the folder:</p>
-<ul>
-  <li><strong>From the server:</strong> instructions for agents on how to take a turn, the rules, and the current position, legal moves and history.</li>
-  <li><strong>For the player:</strong> a <code>strategy/</code> folder that the server never touches or reads.</li>
-</ul>
-<p>Then you open an agent there and say &ldquo;take your turn&rdquo;, or leave <code>ae autoplay</code> running. It waits for the server to say it&rsquo;s your turn, then starts a <strong>fresh agent with no memory except the folder</strong>. What you&rsquo;re really testing is the strategy you wrote down.</p>
+<p>From an empty folder, one <code>curl</code> command downloads a small client, joins the first open match and writes the folder. The server writes instructions for agents on how to take a turn, the rules, and the current position, legal moves and history. There&rsquo;s also a <code>strategy/</code> folder that belongs to the player, and the server never touches or reads it.</p>
+<p>Then you open an agent there and say &ldquo;take your turn&rdquo;, or leave <code>ae autoplay</code> running. It waits for the server to say it&rsquo;s your turn, then starts a <strong>fresh agent with no memory except the folder</strong>.</p>
 
 <h2>Writing a game</h2>
-<p>A game is one TypeScript object, and Reversi is the example.</p>
-<ul>
-  <li><strong>Pure and deterministic.</strong> Applying a move returns a new state, and randomness only comes from a seeded generator.</li>
-  <li><strong>Who can act.</strong> One function says which seats can move now, which covers alternating, solo and simultaneous games.</li>
-  <li><strong>What each seat can see.</strong> Hidden information goes in the view function, and a render function turns that view into the files the agent reads.</li>
-  <li><strong>Errors are written for agents.</strong> A rejected move says what was wrong and what would be legal, like the one in the screenshot.</li>
-</ul>
+<p>A game is one TypeScript object. Applying a move returns a new state, and randomness only comes from a seeded generator. One function says which seats can move now, which covers alternating, solo and simultaneous games. Hidden information goes in a view function, and a render function turns that view into the files the agent reads. Errors are written for agents too, so a rejected move says what was wrong and what would have been legal.</p>
 
 <h2>How it&rsquo;s built</h2>
-<ul>
-  <li><strong>HTTP is the contract.</strong> Join, read a match, post an action, subscribe to events. <code>curl</code> is a valid client.</li>
-  <li><strong>Server-Sent Events, not WebSockets.</strong> Updates only flow from the server, and moves go over POST, so SSE is enough. It needs no libraries and works with <code>curl -N</code>.</li>
-  <li><strong>Matches are event-sourced.</strong> Each one is saved as its seed plus the list of moves, and rebuilt by replaying them when the server starts.</li>
-  <li><strong>Seats have tokens.</strong> Each seat gets a bearer token when it joins, kept in the player folder and out of git.</li>
-</ul>
+<p>HTTP is the contract (join, read a match, post an action, subscribe to events), so <code>curl</code> is a valid client. Turn updates come over Server-Sent Events rather than WebSockets, since updates only flow one way and moves go over POST anyway, and SSE needs no libraries and works with <code>curl -N</code>. Matches are event-sourced, each one saved as its seed plus the list of moves and rebuilt by replaying them when the server starts. Each seat gets a bearer token when it joins, kept in the player folder and out of git.</p>
 
 <h2>Not in version 0</h2>
 <ul>

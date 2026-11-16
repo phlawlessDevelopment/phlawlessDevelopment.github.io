@@ -70,27 +70,24 @@
     </dl>
   </aside>
   <article class="prose">
-<p class="lede">Pick a hero, pick a building on the city map, and work your way up its floors to the boss. Everything you do is a roll: the bottom third of the screen is a felt tray full of dice, and you tap or swipe it to throw the lot.</p>
-<p>Beat the boss and you keep everything you found. Get knocked out or give up, and it&rsquo;s gone.</p>
+<p class="lede">This started as me just wanting a nice dice roller for mobile, like the one in Dice Hunter: Dicemancer Quest, where the dice roll around the bottom of the screen and the rest is left for the game. The first version had every D&amp;D die tumbling about the tray, but Dice Hunter keeps them a lot more constrained, they kind of spin in place. They&rsquo;re probably fudging the animation, which is fine as long as the RNG underneath is decent, so that&rsquo;s what we did. Once the dice felt good, I came up with a game for them.</p>
+<p>You pick a hero, pick a building on the city map, and work your way up its floors to the boss. Everything you do is a roll. The bottom third of the screen is a felt tray full of dice, and you tap or swipe it to throw the lot. Beat the boss and you keep everything you found, get knocked out or give up and it&rsquo;s gone. The first hero in is the Relay DJ, who was my favourite of the concept art.</p>
 
 <h2>Exploring</h2>
 <p>Each floor is a hex map under fog. Your movement dice decide how many steps you get, and some faces carry icons that let you vault furniture or cross the atrium. A d20 rides along with them, and every roll that passes without a fight turns another of its numbers into a skull. Roll a skull and a fight starts.</p>
-<p>Percentile dice go first. Roll under your event odds and an event die pops into the tray: loose change, a tip-off, a supply drop, backup. Each one has a little illustrated card and two or three ways to handle it, some needing a stat check.</p>
-<p>Somewhere on every floor is the lift, locked until you&rsquo;ve dealt with whatever&rsquo;s holding it, plus stash cases, vending machines, routers and supply closets to find.</p>
+<p>Exploring was pretty boring at first, so there are events now. Percentile dice go first, and if you roll under your event odds an event die pops into the tray (loose change, a tip-off, a supply drop, backup). Each one has a little illustrated card and two or three ways to handle it, some needing a stat check. Somewhere on every floor is the lift, locked until you&rsquo;ve dealt with whatever&rsquo;s holding it, plus stash cases, vending machines, routers and supply closets to find.</p>
 
 <h2>Fighting</h2>
-<p>In a fight your hand is your six stats, PUNCH, FLOW, GRIT, TECH, SAVVY and HYPE, each a set of dice decided by its rank. Roll them, let your gear&rsquo;s effects re-roll and add dice, then spend the totals on moves. With PUNCH 6 that&rsquo;s a Haymaker, or a Jab and a Strike. The foe&rsquo;s next move is on a card the whole time, so you know what&rsquo;s coming. Bosses change tactics at half health.</p>
+<p>In a fight your hand is your six stats, PUNCH, FLOW, GRIT, TECH, SAVVY and HYPE, each a set of dice decided by its rank. You roll them, let your gear&rsquo;s effects re-roll and add dice, then spend the totals on moves. With PUNCH 6 that&rsquo;s a Haymaker, or a Jab and a Strike. The foe&rsquo;s next move is on a card the whole time, so you know what&rsquo;s coming, and bosses change tactics at half health.</p>
+<p>I got this a bit wrong the first time. I&rsquo;d described it as a set number of actions per turn, but what I actually wanted was effects like &ldquo;re-roll 1s and 2s on your dex dice&rdquo; that come from your gear, and that&rsquo;s how it works now.</p>
 
 <h2>Building your dice</h2>
-<p>Levelling a weak stat takes the fumble faces off its die, and a strong stat gets a second die, then icons on it, then a full second d6. Gear comes in seven sockets and five rarities, and it adds ranks, armour, re-rolls, extra dice, more steps and better finds. Stickers go straight onto faces.</p>
+<p>Levelling a weak stat takes the fumble faces off its die, and a strong stat gets a second die, then icons on it, then a full second d6. Gear comes in seven sockets and five rarities, and adds ranks, armour, re-rolls, extra dice, more steps and better finds. Stickers go straight onto faces.</p>
 
 <h2>How it&rsquo;s built</h2>
-<ul>
-  <li><strong>The tray doesn&rsquo;t know the rules.</strong> Dice come in groups, and each game mode reads its results by group, so the map, exploring and combat can each hand the tray whatever dice they need.</li>
-  <li><strong>Procedural dice.</strong> The polyhedra are bevelled meshes made in code. At startup every distinct face gets painted into a texture atlas, and a shader puts the icon and the number on the die. Every roll lands flat on the face it was chosen to show.</li>
-  <li><strong>Rules as plain data.</strong> A combat turn is a plain class with no nodes, so the headless tests step through it directly: effects firing, dice chaining, moves landing.</li>
-  <li><strong>A balance sim.</strong> A bot plays the real fight rules and a rough model of whole campaigns, which is how I know the first boss is a pushover and Redline is the wall.</li>
-</ul>
+<p>The tray doesn&rsquo;t know the rules. Dice come in groups, and each part of the game reads its results by group, so the map, exploring and combat can each hand the tray whatever dice they need. The polyhedra are bevelled meshes made in code, and at startup every distinct face gets painted into a texture atlas, with a shader putting the icon and number on the die. Every roll lands flat on the face it was chosen to show, and there&rsquo;s a chi-square test for every die to check the faces actually come up fairly.</p>
+<p>A combat turn is a plain class with no nodes, so the headless tests step through it directly (effects firing, dice chaining, moves landing). There&rsquo;s also a balance sim where a bot plays the real fight rules and a rough model of whole campaigns, which is how I know the first boss is a pushover and Redline is the wall.</p>
+<p>It&rsquo;s an internal playtest build on my phone for now, there&rsquo;s no public build.</p>
   </article>
 </div>
 </main>

@@ -59,33 +59,29 @@
     </dl>
   </aside>
   <article class="prose">
-<p class="lede">Coding agents can write a game but can&rsquo;t see it. godot-mcp gives them eyes and hands: they take a screenshot, look at it, click or press keys, and take another one.</p>
-<p>It works with any Godot 4 game. One call installs a small bridge into the project, and from then on the agent can launch it and play.</p>
+<p class="lede">Coding agents can write a game but they can&rsquo;t see it. I found that out the annoying way, back in September my Godot skill would launch the game with an 8 second timeout, then check for the window after the timeout had already killed it. godot-mcp is the fix for that. It gives agents eyes and hands, they take a screenshot, look at it, click or press keys, and take another one.</p>
+<p>It works with any Godot 4 game. One call installs a small bridge into the project, and from then on the agent can launch it and play. Every Godot game I work on gets the bridge now, and it&rsquo;s how my agents test the games on this site, as much as possible.</p>
 
-<h2>Why it exists</h2>
-<p>The first attempt took screenshots with the desktop compositor. That races the game window, and short runs would close before the window was ever captured. The engine can always save its own pixels mid-run, so the screenshots come from inside the game instead.</p>
-
-<h2>Two halves, one rule</h2>
-<p>An autoload inside the game listens on localhost and runs screenshots, input and scene-tree dumps. A Python MCP server starts and stops the game, forwards the tools and returns screenshots as images. The rule between them is that <strong>everything is in screenshot pixels</strong>: if the agent sees a button at a point in the image, clicking that point hits the button.</p>
+<h2>How it works</h2>
+<p>The first attempt took screenshots with the desktop compositor, which races the game window, so short runs would close before the window was ever captured. The engine can always save its own pixels mid-run, so the screenshots come from inside the game instead.</p>
+<p>So there are two halves. An autoload inside the game listens on localhost and handles screenshots, input and scene-tree dumps, and a Python MCP server starts and stops the game, forwards the tools and returns screenshots as images. The rule between them is that everything is in screenshot pixels, if the agent sees a button at a point in the image, clicking that point hits the button.</p>
 <p>That took a couple of goes. The first version converted coordinates for the engine&rsquo;s stretch mode before sending them, then the engine applied its own stretch on top, and every click missed. Now the bridge only corrects for the window and HiDPI and lets the engine do the rest.</p>
+<p>The <code>tree</code> tool is a bit of a cheat sheet. It dumps the running scene with every control&rsquo;s rectangle in screenshot pixels, plus the text on buttons and labels, so the agent doesn&rsquo;t have to guess where &ldquo;Play Again&rdquo; is from the picture, it can just read it.</p>
 
-<h2>The scene tree as a cheat sheet</h2>
-<p>The <code>tree</code> tool dumps the running scene with every control&rsquo;s rectangle in screenshot pixels, plus the text on buttons and labels. The agent doesn&rsquo;t have to guess where &ldquo;Play Again&rdquo; is from the picture, it can just read it.</p>
+<h2>Phones</h2>
+<p>A lot of my games are for Android, so in October I added phone support. It uses <code>adb</code> instead of the bridge, installs the APK, launches it, takes screenshots, taps, swipes and long-presses at the same coordinates as the screenshot, then reads logcat. That&rsquo;s how the phone games here get tested on a real device.</p>
 
-<h2>Phones too</h2>
-<p>For Android it uses <code>adb</code> instead of the bridge. It installs the APK, launches it, takes screenshots, and taps, swipes and long-presses at the same coordinates as the screenshot, then reads logcat. That&rsquo;s how the phone games here get tested on a real device.</p>
-
-<h2>Careful with input</h2>
+<h2>Being careful with input</h2>
 <ul>
   <li>Input is sent exactly once. If a reply goes missing, the tool returns an error rather than risk a double click.</li>
   <li>Setup backs up the project file and checks the patch, and launch refuses to run until setup is done.</li>
   <li>The bridge only listens on localhost and is for development only, never for a shipped build.</li>
 </ul>
 
-<h2>Limits</h2>
+<h2>What it can&rsquo;t do</h2>
 <ul>
   <li>It needs a display. A headless run has no picture to send.</li>
-  <li>It covers mouse, keyboard and input actions, so menus, shops and board games. Analogue sticks still need something else.</li>
+  <li>It covers mouse, keyboard and input actions, so menus, shops and board games are fine. Analogue sticks still need something else.</li>
 </ul>
   </article>
 </div>

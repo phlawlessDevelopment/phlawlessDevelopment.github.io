@@ -65,22 +65,20 @@
     </dl>
   </aside>
   <article class="prose">
-<p class="lede">There are a lot of models and they change every few weeks. modelpick pulls in benchmark results, prices and what people are saying, then asks Claude to write one line on each model for <em>me</em>: what I&rsquo;d use it for, and when I&rsquo;d reach for something else.</p>
-<p>It lives in the desktop bar. Click the icon and the panel opens in a floating terminal. Hover over it and you get the current picks.</p>
+<p class="lede">There are a lot of models and they change every few weeks. modelpick pulls in benchmark results, prices and what people are saying, then asks Claude to write one line on each model for <em>me</em>, what I&rsquo;d use it for and when I&rsquo;d reach for something else.</p>
+<p>I installed it on 13 October, at the end of a day where Claude Code had run almost entirely on Opus 5.5 (about $47 at list price), which is pretty much the problem it&rsquo;s for. When I last looked, it had Haiku 5.5 down as &ldquo;Fast &amp; cheap&rdquo;, Sonnet 5.5 as the &ldquo;Daily driver&rdquo; and Opus 5.5 as &ldquo;Heavy lifting&rdquo;, only for when the cheaper tier stalls. It lives in my desktop bar, click the icon and the panel opens in a floating terminal, hover over it and you get the current picks.</p>
 
 <h2>What a refresh does</h2>
-<ol class="flow">
-  <li><strong>Collect.</strong> Each source returns signals: a benchmark score, a discussion post, or just &ldquo;this model exists&rdquo;. The benchmarks are free, so they&rsquo;re fetched for every model.</li>
-  <li><strong>Match names.</strong> Every source spells model names its own way. A matcher reconciles them, and you can pin an alias in the config when it gets one wrong.</li>
-  <li><strong>Write the takes.</strong> One call per model, in parallel. Each call also sees a short table of every model, so the takes compare them with each other rather than in a vacuum. A profile file says how I work, and it goes into every prompt.</li>
-</ol>
+<p>Each source (OpenRouter, Anthropic, Artificial Analysis, LMArena, SWE-bench, Aider, Hacker News and Reddit) returns signals, a benchmark score, a discussion post, or just &ldquo;this model exists&rdquo;. The benchmarks are free, so they&rsquo;re fetched for every model.</p>
+<p>The annoying part is that every source spells model names its own way (<code>claude-sonnet-4-5-20250929</code>, &ldquo;Claude 4.5 Sonnet&rdquo;, <code>anthropic/claude-sonnet-4.5</code>), so a matcher reconciles them, and you can pin an alias in the config when it gets one wrong.</p>
+<p>Then there&rsquo;s one Claude call per model, in parallel. Each call also sees a short table of every model, so the takes compare them with each other rather than in a vacuum. A profile file says how I work (my plan, my limits, what I use Claude Code for) and goes into every prompt, which is what makes the takes about me rather than about some average user.</p>
 
 <h2>Keeping it cheap</h2>
 <ul>
   <li>Only a refresh costs anything, and only when you press it. Opening the panel just reads a file.</li>
   <li>Takes are only written for the providers you&rsquo;re showing (Anthropic by default), and superseded models keep their old take without a new call.</li>
   <li>The panel shows what each refresh cost, and asks first if one would write takes for more than 15 models.</li>
-  <li>It can run through <code>claude -p</code> instead of the API, so it counts against a plan instead of a bill.</li>
+  <li>It can run through <code>claude -p</code> instead of the API, so it counts against a plan rather than a bill.</li>
 </ul>
 
 <h2>Adding a source</h2>
