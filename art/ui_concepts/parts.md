@@ -27,3 +27,5 @@ Palette: gruvbox dark — page #1d2021, pane #252423, strip #1d2021, pane border
 - Round 2: spacing/tag size fixed, Mediator pinned left. Cards ~20px tall.
 - Round 3: card bottom tightened; all parts match by self-check. Intro wraps one word later than concept (Figtree metrics) — accepted. Mediator/Don't Dance screenshots are cropped to the pane ratio where the concept squashed them — deliberate, never distort real screenshots.
 - Viewports checked: 1440×1000, 1280×720, 1920×1080, 2560×1080, 800×1300, 390×2000; inner pages mediator, autochess/privacy, about.
+- Council round 1 (Sonnet 7.5, Sol 8, GLM & DeepSeek no vision): fixed card height cascade (−18px), tool label brighter blue, content inset +4px, wordmark −10%, nav underline 3px floating, smaller mono, grey inner pane dividers, ExtraBold buttons, long arrows.
+- Round 4: actions wrapped after bolder buttons → trimmed action size/gaps. All parts match.
