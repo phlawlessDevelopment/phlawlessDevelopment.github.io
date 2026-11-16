@@ -13,6 +13,7 @@
 <meta name="theme-color" content="#1d2021">
 <link rel="icon" href="/icon.png">
 <link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
@@ -32,10 +33,10 @@
   <p class="rail-foot">Web / Games / Systems</p>
 </header>
 <main class="main" id="content">
-<header class="page-head">
+<header class="page-head home-head">
   <p class="prompt" aria-hidden="true"><span class="path">~/projects</span><span class="sigil">$</span><span class="cmd">ls</span></p>
-  <h1>Stuff I&rsquo;ve made</h1>
-  <p>I&rsquo;m Louis. I make games and tools, these days mostly with coding agents. You can try two of these in your browser right now, and the autochess game is in closed testing on Google Play.</p>
+  <h1>Stuff I&rsquo;ve made<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="intro">I&rsquo;m Louis. I make games and tools, these days mostly with coding agents. You can try two of these in your browser right now, and the autochess game is in closed testing on Google Play.</p>
 </header>
 
 <div class="toolbar">
@@ -44,18 +45,19 @@
     <button class="filter" type="button" data-filter="game" aria-pressed="false">games</button>
     <button class="filter" type="button" data-filter="tool" aria-pressed="false">tools</button>
   </div>
-  <p class="count" aria-live="polite"><b data-count>3</b> projects</p>
+  <p class="count" aria-live="polite"><b data-count>3</b>projects</p>
 </div>
 
 <!-- One <li class="project"> per project. data-kind is "game" or "tool" and drives the filters. -->
 <ul class="grid" role="list">
 
-  <li class="project" data-kind="tool">
-    <a class="thumb" href="/mediator/" tabindex="-1" aria-hidden="true">
+  <li class="project is-focused" data-kind="tool">
+    <p class="pane-title" aria-hidden="true">~/projects/mediator</p>
+    <a class="thumb pin-left" href="/mediator/" tabindex="-1" aria-hidden="true">
       <img src="/mediator/conversation-dark.webp" width="1280" height="800" alt="" loading="eager">
-      <span class="badge tool">tool</span>
     </a>
     <div class="project-body">
+      <p class="kind tool">tool</p>
       <h2><a href="/mediator/">Mediator</a></h2>
       <p class="summary">A group chat with an AI that steps in when people start getting heated.</p>
       <ul class="stack" aria-label="Technologies"><li>Java</li><li>Spring Boot</li><li>WebSocket</li><li>SQLite</li></ul>
@@ -67,11 +69,12 @@
   </li>
 
   <li class="project" data-kind="game">
+    <p class="pane-title" aria-hidden="true">~/projects/dont-dance</p>
     <a class="thumb" href="/dont-dance/" tabindex="-1" aria-hidden="true">
       <img src="/dont-dance/character-select.webp" width="1280" height="720" alt="" loading="eager">
-      <span class="badge game">game</span>
     </a>
     <div class="project-body">
+      <p class="kind game">game</p>
       <h2><a href="/dont-dance/">Don&rsquo;t Dance</a></h2>
       <p class="summary">One tired monster, too many tiny singers. A wee arcade game, solo or local co-op.</p>
       <ul class="stack" aria-label="Technologies"><li>Godot</li><li>Local co-op</li><li>Browser</li></ul>
@@ -83,13 +86,14 @@
   </li>
 
   <li class="project" data-kind="game">
+    <p class="pane-title" aria-hidden="true">~/projects/autochess</p>
     <a class="thumb phones" href="/autochess/" tabindex="-1" aria-hidden="true">
       <img src="/autochess/home.webp" width="720" height="1280" alt="" loading="eager">
       <img src="/autochess/board.webp" width="720" height="1280" alt="" loading="eager">
       <img src="/autochess/roster.webp" width="720" height="1280" alt="" loading="lazy">
-      <span class="badge game">game</span>
     </a>
     <div class="project-body">
+      <p class="kind game">game</p>
       <h2><a href="/autochess/">Phlawless Autochess</a></h2>
       <p class="summary">Autochess for your phone, a bit like TFT, played in portrait with one thumb.</p>
       <ul class="stack" aria-label="Technologies"><li>Godot</li><li>GDScript</li><li>Android</li></ul>
@@ -101,12 +105,17 @@
   </li>
 
 </ul>
+
+<footer class="statusline" aria-hidden="true">
+  <span>~/projects</span>
+  <span><b data-count>3</b>projects</span>
+</footer>
 </main>
 <script>
 (() => {
   const grid = document.querySelector(".grid");
   const bar = document.querySelector(".filters");
-  const count = document.querySelector("[data-count]");
+  const counts = document.querySelectorAll("[data-count]");
   if (!grid || !bar) return;
   const cards = [...grid.querySelectorAll(".project")];
   const buttons = [...bar.querySelectorAll(".filter")];
@@ -121,10 +130,10 @@
     let shown = 0;
     cards.forEach(c => { const on = k === "all" || c.dataset.kind === k; c.hidden = !on; shown += on; });
     buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.filter === k)));
-    count.textContent = shown;
+    counts.forEach(n => { n.textContent = shown; });
   };
   bar.addEventListener("click", e => { const b = e.target.closest(".filter"); if (b) apply(b.dataset.filter); });
-  count.textContent = cards.length;
+  counts.forEach(n => { n.textContent = cards.length; });
   bar.hidden = false;
 })();
 </script>
