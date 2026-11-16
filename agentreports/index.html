@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agentreports: where did my tokens go? &ndash; Phlawless Development</title>
+<meta name="description" content="agentreports is a desktop panel for Omarchy that reads every AI coding agent&rsquo;s session history each week and writes two reports, one on token spend and one on prompting habits, compared with the week before. Written in Go.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="agentreports: where did my tokens go? &amp;ndash; Phlawless Development">
+<meta property="og:description" content="agentreports is a desktop panel for Omarchy that reads every AI coding agent&rsquo;s session history each week and writes two reports, one on token spend and one on prompting habits, compared with the week before. Written in Go.">
+<meta property="og:image" content="https://phlawlessdevelopment.github.io/agentreports/findings.webp">
+<link rel="canonical" href="https://phlawlessdevelopment.github.io/agentreports/">
+<meta name="theme-color" content="#1d2021">
+<link rel="icon" href="/icon.png">
+<link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="shell">
+<header class="rail">
+  <a class="wordmark" href="/">Phlawless<br> Development</a>
+  <div class="who">
+    <p class="name">Louis Hopkins</p>
+    <p class="tag">Software &amp; games.</p>
+  </div>
+  <nav class="rail-nav" aria-label="Site">
+    <a href="/" aria-current="true">Work</a>
+    <a href="/about/">About</a>
+    <a href="https://github.com/phlawlessDevelopment" rel="me noopener">GitHub</a>
+  </nav>
+  <p class="rail-foot">Web / Games / Systems</p>
+</header>
+<main class="main" id="content">
+<header class="page-head project-head">
+  <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>agentreports</p>
+  <h1>agentreports</h1>
+  <p class="summary">A weekly report on where my coding agents&rsquo; tokens went, and how I could prompt better.</p>
+  <ul class="stack" aria-label="Technologies"><li>Go</li><li>Bubble Tea</li><li>Omarchy</li><li>systemd</li></ul>
+</header>
+
+<figure class="mat hero">
+  <img src="/agentreports/findings.webp" width="1616" height="1052" alt="The agentreports panel for one week: token spend and prompting summaries marked worse than last week, seven findings graded High, Medium, Low and Good, each with a dollar figure and a trend arrow, and three quick wins." loading="eager">
+</figure>
+<div class="shots">
+  <figure class="mat shot">
+    <img src="/agentreports/report.webp" width="1616" height="1051" alt="The full token spend report for one week: a headline, a note that it&rsquo;s worse than last period, a paragraph comparing it with the week before, the quick wins and the first finding in detail." loading="lazy">
+    <figcaption>The full report</figcaption>
+  </figure>
+</div>
+
+<div class="writeup">
+  <aside class="aside" aria-label="Project facts">
+    <dl class="facts">
+      <dt>Status</dt>
+      <dd>Runs on my desktop, writes a report every Monday</dd>
+      <dt>Language</dt>
+      <dd>Go, with every dependency vendored so it builds offline</dd>
+      <dt>Reads</dt>
+      <dd>Claude Code, Codex, OpenCode and Pi session history, plus git</dd>
+      <dt>Models</dt>
+      <dd>Haiku workers and one Sonnet call per report</dd>
+      <dt>Cost</dt>
+      <dd>About 12 cents for a run over 378 sessions</dd>
+      <dt>Tests</dt>
+      <dd>70, including a two-period run against a fake Anthropic API</dd>
+    </dl>
+  </aside>
+  <article class="prose">
+<p class="lede">I use a lot of coding agents. Every Monday morning, agentreports reads every session they ran that week and writes two reports: where the tokens went and what was wasted, and how I write prompts and what that costs me.</p>
+<p>Each report is compared with the one before, so I can see whether I&rsquo;m actually getting better.</p>
+
+<h2>Code does the counting, models do the judging</h2>
+<ol class="flow">
+  <li><strong>Code reads and prices every call.</strong> It removes the copies that resumed sessions make, prices each call, and runs detectors: cache expiry after idle gaps, context past 100k, big tool output carried for the rest of a session, files re-read unchanged, a top-tier model on light turns, retry loops. For prompts it looks for vague openers, corrections, bare &ldquo;continue&rdquo; turns and marathon sessions. Each finding comes with its evidence and a dollar estimate.</li>
+  <li><strong>Haiku workers explain.</strong> They run in parallel and look at the costliest sessions, and grade how a sample of them were prompted.</li>
+  <li><strong>Sonnet writes the report.</strong> One call turns the figures, the signals, the worker notes and last week&rsquo;s report into findings.</li>
+  <li><strong>Code checks the result.</strong> Findings have to point at real signals, and trends and savings come from the data. Any number in the text that doesn&rsquo;t match the input gets listed in the report.</li>
+</ol>
+
+<h2>Cheap on purpose</h2>
+<ul>
+  <li>A bare <code>claude -p</code> call here carried about 21k tokens of skills, plugins and settings. Calling it with none of that brought it under 1k, and a trivial call went from $0.0027 to $0.00017.</li>
+  <li>Every model call is cached by its content, so a retried run never pays twice, and a cost ceiling stops a run before it goes over.</li>
+  <li>Only two things ever call a model: pressing Sync now, or the timer when a report is due. Opening the panel just reads files.</li>
+  <li>It ignores its own runs, so it never reports on itself.</li>
+</ul>
+
+<h2>Getting the details right</h2>
+<ul>
+  <li><strong>Checked against real data.</strong> The Claude Code, OpenCode and Codex readers were checked against real history on this machine, and their call and token counts match independent tallies exactly.</li>
+  <li><strong>A timer that catches up.</strong> A systemd timer writes the report on report day. If the laptop was off, it catches up when the machine wakes or at the next login. A sync late on Sunday won&rsquo;t leave a 13-hour report for Monday.</li>
+  <li><strong>Syncing in the background.</strong> A sync runs as its own systemd unit, so you can close the panel or the terminal and get a notification when it&rsquo;s done.</li>
+  <li><strong>Keeping history.</strong> Agents delete their own history after a while, so agentreports keeps its own compressed copy of every session it reads.</li>
+  <li><strong>Privacy.</strong> Prompts are stripped of keys, tokens and secrets before they&rsquo;re stored or sent. Tool output is never sent, only its size.</li>
+</ul>
+  </article>
+</div>
+</main>
+</div>
+</body>
+</html>

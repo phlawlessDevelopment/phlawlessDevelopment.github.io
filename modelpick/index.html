@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>modelpick: which AI model should I use for this? &ndash; Phlawless Development</title>
+<meta name="description" content="modelpick is a desktop panel for Omarchy that collects benchmarks, prices and recent discussion for current AI models, then has Claude write a one-line take on each, aimed at how you work. Written in Go.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="modelpick: which AI model should I use for this? &amp;ndash; Phlawless Development">
+<meta property="og:description" content="modelpick is a desktop panel for Omarchy that collects benchmarks, prices and recent discussion for current AI models, then has Claude write a one-line take on each, aimed at how you work. Written in Go.">
+<meta property="og:image" content="https://phlawlessdevelopment.github.io/modelpick/list.webp">
+<link rel="canonical" href="https://phlawlessdevelopment.github.io/modelpick/">
+<meta name="theme-color" content="#1d2021">
+<link rel="icon" href="/icon.png">
+<link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="shell">
+<header class="rail">
+  <a class="wordmark" href="/">Phlawless<br> Development</a>
+  <div class="who">
+    <p class="name">Louis Hopkins</p>
+    <p class="tag">Software &amp; games.</p>
+  </div>
+  <nav class="rail-nav" aria-label="Site">
+    <a href="/" aria-current="true">Work</a>
+    <a href="/about/">About</a>
+    <a href="https://github.com/phlawlessDevelopment" rel="me noopener">GitHub</a>
+  </nav>
+  <p class="rail-foot">Web / Games / Systems</p>
+</header>
+<main class="main" id="content">
+<header class="page-head project-head">
+  <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>modelpick</p>
+  <h1>modelpick</h1>
+  <p class="summary">A desktop panel that tells you which AI model to use, written for how you work.</p>
+  <ul class="stack" aria-label="Technologies"><li>Go</li><li>Bubble Tea</li><li>Omarchy</li><li>Claude</li></ul>
+</header>
+
+<figure class="mat hero">
+  <img src="/modelpick/list.webp" width="1616" height="1051" alt="The modelpick panel: Anthropic and OpenAI models listed with their prices per million tokens, a role like Daily driver, Heavy lifting or Superseded, and a one-line take on each." loading="eager">
+</figure>
+<div class="shots">
+  <figure class="mat shot">
+    <img src="/modelpick/detail.webp" width="1616" height="1051" alt="modelpick&rsquo;s details for Claude Sonnet 5.5: advice written for me, what to use it for and what to avoid it for, its benchmark rank, and a summary of what people are saying with links to the Hacker News threads." loading="lazy">
+    <figcaption>One model up close</figcaption>
+  </figure>
+</div>
+
+<div class="writeup">
+  <aside class="aside" aria-label="Project facts">
+    <dl class="facts">
+      <dt>Status</dt>
+      <dd>Runs on my desktop from the bar</dd>
+      <dt>Language</dt>
+      <dd>Go, with every dependency vendored so it builds offline</dd>
+      <dt>Sources</dt>
+      <dd>OpenRouter, Anthropic, Artificial Analysis, LMArena, SWE-bench, Aider, Hacker News and Reddit</dd>
+      <dt>Model</dt>
+      <dd>Claude Haiku by default, through the API or a Claude plan</dd>
+      <dt>Desktop</dt>
+      <dd>Omarchy bar icon, floating Hyprland window</dd>
+    </dl>
+  </aside>
+  <article class="prose">
+<p class="lede">There are a lot of models and they change every few weeks. modelpick pulls in benchmark results, prices and what people are saying, then asks Claude to write one line on each model for <em>me</em>: what I&rsquo;d use it for, and when I&rsquo;d reach for something else.</p>
+<p>It lives in the desktop bar. Click the icon and the panel opens in a floating terminal. Hover over it and you get the current picks.</p>
+
+<h2>What a refresh does</h2>
+<ol class="flow">
+  <li><strong>Collect.</strong> Each source returns signals: a benchmark score, a discussion post, or just &ldquo;this model exists&rdquo;. The benchmarks are free, so they&rsquo;re fetched for every model.</li>
+  <li><strong>Match names.</strong> Every source spells model names its own way. A matcher reconciles them, and you can pin an alias in the config when it gets one wrong.</li>
+  <li><strong>Write the takes.</strong> One call per model, in parallel. Each call also sees a short table of every model, so the takes compare them with each other rather than in a vacuum. A profile file says how I work, and it goes into every prompt.</li>
+</ol>
+
+<h2>Keeping it cheap</h2>
+<ul>
+  <li>Only a refresh costs anything, and only when you press it. Opening the panel just reads a file.</li>
+  <li>Takes are only written for the providers you&rsquo;re showing (Anthropic by default), and superseded models keep their old take without a new call.</li>
+  <li>The panel shows what each refresh cost, and asks first if one would write takes for more than 15 models.</li>
+  <li>It can run through <code>claude -p</code> instead of the API, so it counts against a plan instead of a bill.</li>
+</ul>
+
+<h2>Adding a source</h2>
+<p>A source is one Go file that implements a four-method interface and registers itself. It hands back signals and doesn&rsquo;t care how the rest of the app uses them. The tests run a whole refresh against fakes of every source and of the Claude API.</p>
+  </article>
+</div>
+</main>
+</div>
+</body>
+</html>

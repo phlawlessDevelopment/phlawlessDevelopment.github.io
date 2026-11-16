@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ccg-coach: a post-game coach for MTG Arena &ndash; Phlawless Development</title>
+<meta name="description" content="ccg-coach rebuilds MTG Arena matches from the game log into a plain record, then hands a short, fact-checked brief to a language model for coaching. Written in Rust, with a CLI and a terminal UI.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ccg-coach: a post-game coach for MTG Arena &amp;ndash; Phlawless Development">
+<meta property="og:description" content="ccg-coach rebuilds MTG Arena matches from the game log into a plain record, then hands a short, fact-checked brief to a language model for coaching. Written in Rust, with a CLI and a terminal UI.">
+<meta property="og:image" content="https://phlawlessdevelopment.github.io/ccg-coach/timeline.webp">
+<link rel="canonical" href="https://phlawlessdevelopment.github.io/ccg-coach/">
+<meta name="theme-color" content="#1d2021">
+<link rel="icon" href="/icon.png">
+<link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="shell">
+<header class="rail">
+  <a class="wordmark" href="/">Phlawless<br> Development</a>
+  <div class="who">
+    <p class="name">Louis Hopkins</p>
+    <p class="tag">Software &amp; games.</p>
+  </div>
+  <nav class="rail-nav" aria-label="Site">
+    <a href="/" aria-current="true">Work</a>
+    <a href="/about/">About</a>
+    <a href="https://github.com/phlawlessDevelopment" rel="me noopener">GitHub</a>
+  </nav>
+  <p class="rail-foot">Web / Games / Systems</p>
+</header>
+<main class="main" id="content">
+<header class="page-head project-head">
+  <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>ccg-coach</p>
+  <h1>ccg-coach</h1>
+  <p class="summary">A post-game coach for MTG Arena that only talks about what actually happened in the match.</p>
+  <ul class="stack" aria-label="Technologies"><li>Rust</li><li>Ratatui</li><li>SQLite</li><li>LLM</li></ul>
+</header>
+
+<figure class="mat hero">
+  <img src="/ccg-coach/timeline.webp" width="1614" height="1055" alt="The ccg-coach terminal UI in Gruvbox colours: a list of play sessions on the left, and on the right the timeline of a 17-turn win, with the key turns, the opponent&rsquo;s spells by turn and a section for what can&rsquo;t be known from the log." loading="eager">
+</figure>
+
+<div class="writeup">
+  <aside class="aside" aria-label="Project facts">
+    <dl class="facts">
+      <dt>Status</dt>
+      <dd>Works on my machine with my own Arena logs</dd>
+      <dt>Language</dt>
+      <dd>Rust, five crates in one workspace</dd>
+      <dt>Interface</dt>
+      <dd>A CLI, and a terminal UI built with Ratatui</dd>
+      <dt>Storage</dt>
+      <dd>SQLite, migrated forward automatically</dd>
+      <dt>Model</dt>
+      <dd>Any OpenAI-compatible endpoint, including a local one</dd>
+      <dt>Tests</dt>
+      <dd>79, with format, Clippy and tests run in CI</dd>
+    </dl>
+  </aside>
+  <article class="prose">
+<p class="lede">Arena writes a detailed log while you play. ccg-coach reads it, rebuilds each match turn by turn, and stores a plain record of who cast what and when. You can read that record yourself, or ask a model to coach you on it.</p>
+<p>The coach never sees the log. It gets a short brief made from the record, and it has to point at the turns it&rsquo;s talking about.</p>
+
+<h2>How a log becomes a review</h2>
+<ol class="flow">
+  <li><strong>Find and parse.</strong> It finds Arena&rsquo;s log on Linux under Proton or Wine, parses it and turns the raw events into matches, games, turns and actions.</li>
+  <li><strong>Store.</strong> Matches go into SQLite. Importing is idempotent per match, so running it again never doubles anything.</li>
+  <li><strong>Name the cards.</strong> Card IDs are turned into names from a local cache of Scryfall&rsquo;s data.</li>
+  <li><strong>Build the brief.</strong> Code, not a model, picks out the key turns, both deck lists as far as they were seen, and a list of what can&rsquo;t be known from the log.</li>
+  <li><strong>Coach.</strong> The brief goes to the model. Follow-up questions keep the same brief and the conversation so far.</li>
+</ol>
+
+<h2>Keeping the coach honest</h2>
+<ul>
+  <li><strong>Every point is labelled</strong> FACT, INFERENCE or UNCERTAIN, and has to cite a turn number.</li>
+  <li><strong>It can&rsquo;t talk about cards it hasn&rsquo;t seen.</strong> The prompt forbids reasoning about cards that aren&rsquo;t in the brief, and the brief says plainly that the opponent&rsquo;s hand and draws are unknown.</li>
+  <li><strong>The context has a budget.</strong> About 3,000 tokens. Ordinary turns get dropped before key turns, and key turns never are.</li>
+  <li><strong>It doesn&rsquo;t guess.</strong> Cards Arena doesn&rsquo;t name show up as unknown, and a match with no result in the log is stored as unknown.</li>
+</ul>
+
+<h2>Local first</h2>
+<p>Parsing, storage, the brief and the chat history all stay on your machine. The only thing that leaves is the brief, and only to the endpoint you point it at, which can be a model running locally. Every conversation stores a hash of its prompt, so you can check later exactly what was sent.</p>
+
+<h2>What it doesn&rsquo;t do yet</h2>
+<ul>
+  <li>It&rsquo;s built around Best-of-1 Standard ladder games.</li>
+  <li>The quality of the coaching hasn&rsquo;t been measured, only the plumbing.</li>
+</ul>
+  </article>
+</div>
+</main>
+</div>
+</body>
+</html>

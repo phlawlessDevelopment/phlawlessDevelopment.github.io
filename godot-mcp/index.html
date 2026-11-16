@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>godot-mcp: let coding agents play Godot games &ndash; Phlawless Development</title>
+<meta name="description" content="godot-mcp is an MCP server that lets AI agents see and play any Godot 4 game, with exact screenshots from inside the engine and real mouse, keyboard and action input. It also drives Android phones over ADB.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="godot-mcp: let coding agents play Godot games &amp;ndash; Phlawless Development">
+<meta property="og:description" content="godot-mcp is an MCP server that lets AI agents see and play any Godot 4 game, with exact screenshots from inside the engine and real mouse, keyboard and action input. It also drives Android phones over ADB.">
+<meta property="og:image" content="https://phlawlessdevelopment.github.io/godot-mcp/e2e.webp">
+<link rel="canonical" href="https://phlawlessdevelopment.github.io/godot-mcp/">
+<meta name="theme-color" content="#1d2021">
+<link rel="icon" href="/icon.png">
+<link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="shell">
+<header class="rail">
+  <a class="wordmark" href="/">Phlawless<br> Development</a>
+  <div class="who">
+    <p class="name">Louis Hopkins</p>
+    <p class="tag">Software &amp; games.</p>
+  </div>
+  <nav class="rail-nav" aria-label="Site">
+    <a href="/" aria-current="true">Work</a>
+    <a href="/about/">About</a>
+    <a href="https://github.com/phlawlessDevelopment" rel="me noopener">GitHub</a>
+  </nav>
+  <p class="rail-foot">Web / Games / Systems</p>
+</header>
+<main class="main" id="content">
+<header class="page-head project-head">
+  <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>godot-mcp</p>
+  <h1>godot-mcp</h1>
+  <p class="summary">An MCP server that lets coding agents see and play Godot games like a person would.</p>
+  <ul class="stack" aria-label="Technologies"><li>Python</li><li>GDScript</li><li>MCP</li><li>ADB</li></ul>
+</header>
+
+<figure class="mat hero">
+  <img src="/godot-mcp/e2e.webp" width="1558" height="959" alt="The godot-mcp end-to-end test in a terminal: it installs the bridge, launches a demo game, takes a screenshot, finds the TAP ME button in the scene tree, clicks it and checks the game counted the tap, then sends a key, an action and a drag, reads the logs and stops the game. Every check passes." loading="eager">
+</figure>
+
+<div class="writeup">
+  <aside class="aside" aria-label="Project facts">
+    <dl class="facts">
+      <dt>Status</dt>
+      <dd>My agents use it to test the games on this site</dd>
+      <dt>Server</dt>
+      <dd>Python, speaking MCP over stdio</dd>
+      <dt>Bridge</dt>
+      <dd>A GDScript autoload that listens on localhost</dd>
+      <dt>Tools</dt>
+      <dd>Screenshot, click, drag, key, action, scene tree and logs, plus 13 for Android</dd>
+      <dt>Tests</dt>
+      <dd>A handshake test, mocked Android tests and a full run against a demo game</dd>
+    </dl>
+  </aside>
+  <article class="prose">
+<p class="lede">Coding agents can write a game but can&rsquo;t see it. godot-mcp gives them eyes and hands: they take a screenshot, look at it, click or press keys, and take another one.</p>
+<p>It works with any Godot 4 game. One call installs a small bridge into the project, and from then on the agent can launch it and play.</p>
+
+<h2>Why it exists</h2>
+<p>The first attempt took screenshots with the desktop compositor. That races the game window, and short runs would close before the window was ever captured. The engine can always save its own pixels mid-run, so the screenshots come from inside the game instead.</p>
+
+<h2>Two halves, one rule</h2>
+<p>An autoload inside the game listens on localhost and runs screenshots, input and scene-tree dumps. A Python MCP server starts and stops the game, forwards the tools and returns screenshots as images. The rule between them is that <strong>everything is in screenshot pixels</strong>: if the agent sees a button at a point in the image, clicking that point hits the button.</p>
+<p>That took a couple of goes. The first version converted coordinates for the engine&rsquo;s stretch mode before sending them, then the engine applied its own stretch on top, and every click missed. Now the bridge only corrects for the window and HiDPI and lets the engine do the rest.</p>
+
+<h2>The scene tree as a cheat sheet</h2>
+<p>The <code>tree</code> tool dumps the running scene with every control&rsquo;s rectangle in screenshot pixels, plus the text on buttons and labels. The agent doesn&rsquo;t have to guess where &ldquo;Play Again&rdquo; is from the picture, it can just read it.</p>
+
+<h2>Phones too</h2>
+<p>For Android it uses <code>adb</code> instead of the bridge. It installs the APK, launches it, takes screenshots, and taps, swipes and long-presses at the same coordinates as the screenshot, then reads logcat. That&rsquo;s how the phone games here get tested on a real device.</p>
+
+<h2>Careful with input</h2>
+<ul>
+  <li>Input is sent exactly once. If a reply goes missing, the tool returns an error rather than risk a double click.</li>
+  <li>Setup backs up the project file and checks the patch, and launch refuses to run until setup is done.</li>
+  <li>The bridge only listens on localhost and is for development only, never for a shipped build.</li>
+</ul>
+
+<h2>Limits</h2>
+<ul>
+  <li>It needs a display. A headless run has no picture to send.</li>
+  <li>It covers mouse, keyboard and input actions, so menus, shops and board games. Analogue sticks still need something else.</li>
+</ul>
+  </article>
+</div>
+</main>
+</div>
+</body>
+</html>

@@ -45,7 +45,7 @@
     <button class="filter" type="button" data-filter="game" aria-pressed="false">games</button>
     <button class="filter" type="button" data-filter="tool" aria-pressed="false">tools</button>
   </div>
-  <p class="count" aria-live="polite"><b data-count>6</b>projects</p>
+  <p class="count" aria-live="polite"><b data-count>12</b>projects</p>
 </div>
 
 <!-- One <li class="project"> per project. data-kind is "game" or "tool" and drives the filters. -->
@@ -157,11 +157,111 @@
     </div>
   </li>
 
+  <li class="project" data-kind="game">
+    <p class="pane-title" aria-hidden="true">~/projects/twin-lanes</p>
+    <a class="thumb phones" href="/twin-lanes/" tabindex="-1" aria-hidden="true">
+      <img src="/twin-lanes/menu.webp" width="720" height="1280" alt="" loading="lazy">
+      <img src="/twin-lanes/board.webp" width="720" height="1280" alt="" loading="lazy">
+      <img src="/twin-lanes/hand.webp" width="720" height="1280" alt="" loading="lazy">
+    </a>
+    <div class="project-body">
+      <p class="kind game">game</p>
+      <h2><a href="/twin-lanes/">Twin Lanes</a></h2>
+      <p class="summary">A card battler for your phone where units take turns stepping out to fire their big attack. Balanced by an AI-versus-AI sim.</p>
+      <ul class="stack" aria-label="Technologies"><li>Godot</li><li>GDScript</li><li>Android</li></ul>
+      <p class="status wip">Prototype</p>
+      <div class="actions">
+        <a class="btn" href="/twin-lanes/">Have a look <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </li>
+
+  <li class="project" data-kind="tool">
+    <p class="pane-title" aria-hidden="true">~/projects/agentreports</p>
+    <a class="thumb pin-left" href="/agentreports/" tabindex="-1" aria-hidden="true">
+      <img src="/agentreports/findings.webp" width="1616" height="1052" alt="" loading="lazy">
+    </a>
+    <div class="project-body">
+      <p class="kind tool">tool</p>
+      <h2><a href="/agentreports/">agentreports</a></h2>
+      <p class="summary">A weekly report on where my coding agents&rsquo; tokens went, and how I could prompt better.</p>
+      <ul class="stack" aria-label="Technologies"><li>Go</li><li>Bubble Tea</li><li>Omarchy</li></ul>
+      <div class="actions">
+        <a class="btn" href="/agentreports/">How it works <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </li>
+
+  <li class="project" data-kind="tool">
+    <p class="pane-title" aria-hidden="true">~/projects/modelpick</p>
+    <a class="thumb pin-left" href="/modelpick/" tabindex="-1" aria-hidden="true">
+      <img src="/modelpick/list.webp" width="1616" height="1051" alt="" loading="lazy">
+    </a>
+    <div class="project-body">
+      <p class="kind tool">tool</p>
+      <h2><a href="/modelpick/">modelpick</a></h2>
+      <p class="summary">A desktop panel that tells you which AI model to use, written for how you work.</p>
+      <ul class="stack" aria-label="Technologies"><li>Go</li><li>Bubble Tea</li><li>Omarchy</li></ul>
+      <div class="actions">
+        <a class="btn" href="/modelpick/">How it works <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </li>
+
+  <li class="project" data-kind="tool">
+    <p class="pane-title" aria-hidden="true">~/projects/godot-mcp</p>
+    <a class="thumb pin-left" href="/godot-mcp/" tabindex="-1" aria-hidden="true">
+      <img src="/godot-mcp/e2e.webp" width="1558" height="959" alt="" loading="lazy">
+    </a>
+    <div class="project-body">
+      <p class="kind tool">tool</p>
+      <h2><a href="/godot-mcp/">godot-mcp</a></h2>
+      <p class="summary">An MCP server that lets coding agents see and play Godot games, on desktop or on a phone.</p>
+      <ul class="stack" aria-label="Technologies"><li>Python</li><li>GDScript</li><li>MCP</li></ul>
+      <div class="actions">
+        <a class="btn" href="/godot-mcp/">How it works <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </li>
+
+  <li class="project" data-kind="tool">
+    <p class="pane-title" aria-hidden="true">~/projects/ccg-coach</p>
+    <a class="thumb pin-left" href="/ccg-coach/" tabindex="-1" aria-hidden="true">
+      <img src="/ccg-coach/timeline.webp" width="1614" height="1055" alt="" loading="lazy">
+    </a>
+    <div class="project-body">
+      <p class="kind tool">tool</p>
+      <h2><a href="/ccg-coach/">ccg-coach</a></h2>
+      <p class="summary">A post-game coach for MTG Arena that only talks about what actually happened in the match.</p>
+      <ul class="stack" aria-label="Technologies"><li>Rust</li><li>Ratatui</li><li>SQLite</li></ul>
+      <div class="actions">
+        <a class="btn" href="/ccg-coach/">How it works <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </li>
+
+  <li class="project" data-kind="tool">
+    <p class="pane-title" aria-hidden="true">~/projects/agent-engine</p>
+    <a class="thumb pin-left" href="/agent-engine/" tabindex="-1" aria-hidden="true">
+      <img src="/agent-engine/status.webp" width="1596" height="874" alt="" loading="lazy">
+    </a>
+    <div class="project-body">
+      <p class="kind tool">tool</p>
+      <h2><a href="/agent-engine/">agent-engine</a></h2>
+      <p class="summary">A rules server for turn-based games where the players are coding agents.</p>
+      <ul class="stack" aria-label="Technologies"><li>TypeScript</li><li>Node</li><li>SSE</li></ul>
+      <p class="status wip">Version 0</p>
+      <div class="actions">
+        <a class="btn" href="/agent-engine/">How it works <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </li>
+
 </ul>
 
 <footer class="statusline" aria-hidden="true">
   <span>~/projects</span>
-  <span><b data-count>6</b>projects</span>
+  <span><b data-count>12</b>projects</span>
 </footer>
 </main>
 <script>
