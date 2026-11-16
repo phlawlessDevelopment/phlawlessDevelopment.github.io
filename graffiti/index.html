@@ -35,7 +35,7 @@
 <header class="page-head project-head">
   <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>Graffiti</p>
   <h1>Graffiti</h1>
-  <p class="summary">Fight well in the right place, and the floor turns your colour.</p>
+  <p class="summary">A Diablo-style brawler crossed with Tony Hawk&rsquo;s graffiti mode, where good combos claim the floor in your colour.</p>
   <ul class="stack" aria-label="Technologies"><li>Godot</li><li>GDScript</li><li>LAN multiplayer</li></ul>
 </header>
 
@@ -71,31 +71,32 @@
     </dl>
   </aside>
   <article class="prose">
-<p class="lede">You&rsquo;re a wee pawn with a floating friend, on a paved floor cut into nine areas. Waves of corruption pour out of portals, and every combo you land gets banked into the area you&rsquo;re standing in. Beat that area&rsquo;s best and it&rsquo;s yours.</p>
-<p>A match runs against the clock. When the buzzer goes, whoever holds the most floor wins, and everybody gets an award for something.</p>
+<p class="lede">The idea is a Diablo-style ARPG crossed with the graffiti mode from Tony Hawk&rsquo;s, where you claim bits of the map by doing better in them than anyone else. Instead of tricks it&rsquo;s combat, so it needed a combo system and a style meter like Devil May Cry&rsquo;s that grades you for mixing things up.</p>
+<p>You&rsquo;re a wee pawn with a floating friend, on a paved floor cut into nine areas. Waves of corruption pour out of portals, and every combo you land gets banked into the area you&rsquo;re standing in. Beat that area&rsquo;s best and it&rsquo;s yours. A match runs against the clock (10 minutes by default, but you can set whatever), and when the buzzer goes whoever holds the most floor wins, and everybody gets an award for something, longest combo and stuff like that.</p>
 
-<h2>Combos, style and claiming</h2>
-<p>Every hit adds to a combo and fills a style meter that drains on its own, graded from D up to SSS. The higher the grade, the more each hit is worth. Variety is what fills it: repeating the same attack is worth less each time and switching is worth more, so mashing one button sits at D while mixing all six gets you to S.</p>
-<p>The combo belongs to the area it started in. Step over a border, or let the three-second timer run out, and it&rsquo;s scored. If it beats the area&rsquo;s best, the area fills with your colour, its name and score get written on the floor, and its landmark, border, wall eyes and lamp pennants all change to match.</p>
+<h2>Combos and claiming</h2>
+<p>Every hit adds to a combo and fills a style meter that drains on its own, graded from D up to SSS, and the higher the grade the more each hit is worth. Variety is what fills it. Repeating the same attack is worth less each time and switching is worth more, so mashing one button sits at D while mixing all six gets you to S.</p>
+<p>The combo belongs to the area it started in. Step over a border, or let the three-second timer run out, and it&rsquo;s scored. If it beats the area&rsquo;s best, the area fills with your colour, its name and score get written on the floor, and its landmark, border, wall eyes and lamp pennants all change to match. I wanted every bit of the map to belong to an area, so the areas are a Voronoi diagram, each one owns the floor nearer to its site than to any other, and the tile-by-tile border inlay follows when a site moves.</p>
 
-<h2>Six ways to hit things</h2>
-<p>A basic strike you can walk while swinging, a 180&deg; slash, a quake you aim at the floor, a whirlwind, a ward that shields you and calls your friend home, and a spirit bolt, which is your friend himself thrown like a boomerang. Space dashes through anything in the way. Skills can be dragged around the bar, and it all works on a gamepad as a twin stick.</p>
+<h2>Attacks</h2>
+<p>There are six. A basic strike you can walk while swinging, a 180&deg; slash, a quake you aim at the floor, a whirlwind, a ward that shields you and calls your friend home, and a spirit bolt, which is your friend himself thrown like a boomerang (all the ranged stuff is him). Space dashes through anything in the way, skills can be dragged around the bar, and it all works on a gamepad as a twin stick.</p>
 
 <h2>Corruption</h2>
-<p>Four kinds of enemy, all in the same dark violet, told apart by shape and how they fight. Cinders crowd you in threes, Blocks stomp, Darts circle and dash down a lane, and Hexes hang back and shoot. Every attack follows the same rhythm: stop, paint a warning on the floor, strike, recover. The warnings use the attack&rsquo;s own smear art lying flat on the floor and filling in, so you see the hit before it lands.</p>
+<p>Four kinds of enemy, all in the same dark violet, told apart by shape and how they fight. Cinders crowd you in threes, Blocks stomp, Darts circle and dash down a lane, and Hexes hang back and shoot. They come through portals in waves, loosely like the Helltide in Diablo 4 but a lot less relentless. Every attack follows the same rhythm (stop, paint a warning on the floor, strike, recover). The warnings used to be plain boxes on the floor, which looked out of place, so now they&rsquo;re the attack&rsquo;s own smear art lying flat and filling in, and you see the hit before it lands.</p>
+<p>Under the hood there&rsquo;s one shared enemy that handles state, navigation, separation and taking hits, and a small brain per behaviour that only steers and decides when to attack. Health, speed and timings live in resources, so tuning doesn&rsquo;t touch code.</p>
 
-<h2>How it&rsquo;s built</h2>
-<ul>
-  <li><strong>Areas are a Voronoi diagram.</strong> Each area has a site, and owns the floor nearer to it than to any other site. Moving a site moves the borders, and the tile-by-tile border inlay follows.</li>
-  <li><strong>Enemies are a state machine plus a brain.</strong> One shared enemy handles state, navigation, separation and taking hits. A small brain per behaviour only steers and decides when to attack. Health, speed and timings live in resources, so tuning doesn&rsquo;t touch code.</li>
-  <li><strong>Multiplayer for friends on a network.</strong> One machine runs the game server and serves the web build over https from the same port, so phones and laptops on the Wi-Fi just open an address and join. The server owns the waves, enemies and the clock.</li>
-  <li><strong>Measured responsiveness.</strong> A latency probe fires the real input events from a second thread and times press to attack, first changed frame, damage and &ldquo;free again&rdquo; for every skill.</li>
-  <li><strong>Lots of headless tests.</strong> Controls in all three schemes, every ability, combos, waves, the Voronoi cutting, the level art, whole matches and a networked game against a bot in another process.</li>
-</ul>
+<h2>Making it feel responsive</h2>
+<p>At one point the controls just didn&rsquo;t feel responsive enough, and I couldn&rsquo;t say exactly why. So rather than guess, I had it measured. A latency probe fires the real input events from a second thread and times press to attack, first changed frame, damage and &ldquo;free again&rdquo; for every skill, and that turned up three fixes.</p>
+
+<h2>Multiplayer</h2>
+<p>I&rsquo;ve been putting web builds of my games on this site, so I asked what it&rsquo;d take to play this with people on the same network. One machine runs the game server and serves the web build over https from the same port, so phones and laptops on the Wi-Fi just open an address and join, up to eight of you. The server owns the waves, the enemies and the clock. There&rsquo;s a Windows build too.</p>
+
+<h2>Tests</h2>
+<p>13 headless test scripts covering the controls in all three schemes, every ability, combos, waves, the Voronoi cutting, the level art, whole matches, and a networked game against a bot in another process.</p>
 
 <h2>What it doesn&rsquo;t do yet</h2>
 <ul>
-  <li>The four elements are only colours for now. They all play the same.</li>
+  <li>The four elements are only colours for now, they all play the same.</li>
   <li>The pawn and the enemies only have walk loops, so attacks are squash and stretch rather than proper animation.</li>
   <li>Multiplayer trusts each player about their own hits. It&rsquo;s for friends, not strangers.</li>
   <li>There&rsquo;s no public build yet.</li>

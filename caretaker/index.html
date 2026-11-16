@@ -65,15 +65,16 @@
     </dl>
   </aside>
   <article class="prose">
-<p class="lede">The lights are off, groups of kids are sneaking into the school, and you&rsquo;ve got a torch and ten minutes. Fix everything they wreck before the clock runs out.</p>
-<p>The kids run from you, so you can&rsquo;t just tidy up behind them. Hold the torch on one for a couple of seconds and you&rsquo;ve identified them (&ldquo;I knew that was you, Jimmy!&rdquo;), and they go home for good. Fewer kids means less wrecking, so that&rsquo;s how you get ahead.</p>
+<p class="lede">Back in 2020 I made a 3D game in Unity about a school caretaker chasing kids round a dark school with a torch, and it&rsquo;s still sitting on an old GitHub account of mine. In November 2026 I started it again in Godot, top-down 2D this time, and kept it small to begin with: WASD, a torch, a dark school and kids that run away from you. It&rsquo;s basically hide and seek the wrong way round.</p>
+<p>The lights are off, groups of kids are sneaking in, and you&rsquo;ve got a torch and ten minutes to fix everything they wreck. They run from you, so you can&rsquo;t just tidy up behind them. Hold the torch on one for a couple of seconds and you&rsquo;ve identified them (&ldquo;I knew that was you, Jimmy!&rdquo;), and they go home for good. Fewer kids means less wrecking, so that&rsquo;s how you get ahead.</p>
 
 <h2>The shift</h2>
 <p>Three groups of two to four kids come in through the school&rsquo;s two entrances, and the PA tells you which one. Every kid has a rolled leadership and lone-wolf score, so groups follow their bossiest member, and a kid who doesn&rsquo;t fancy the leader wanders off and starts a group of their own.</p>
 <p>Chairs, desks, lockers, bookcases, chalkboards and the teacher&rsquo;s chair all have a price. Smashing one goes on the damage bill, fixing it takes half back, and any kid you haven&rsquo;t lit up for a while runs up a pound a second just by being about. The bill is your score.</p>
-<p>Doors open by themselves and block the torch when they shut. Open one on a room full of kids and they hear it and scatter. When a kid walks into a room its lights come on, which gives them away, and you can sneak over and flick the switch back off.</p>
+<p>Doors open by themselves and block the torch when they shut, and if you open one on a room full of kids they hear it and scatter. When a kid walks into a room the lights come on, which gives them away, and you can sneak over and flick the switch back off.</p>
 
 <h2>Four caretakers</h2>
+<p>Radar and Segway came first, then the Detective and the Assistant came over from the old Unity version.</p>
 <div class="table-scroll">
 <table>
   <thead>
@@ -88,13 +89,13 @@
 </table>
 </div>
 
+<h2>Bringing the old version across</h2>
+<p>Once the basics were working, I had an agent clone the 2020 repo and go back through its history (the last commit made it look like loads of stuff had been deleted), read the C#, scenes and prefabs, and write up everything it had that this one didn&rsquo;t. I went through that list, cut a couple of things (kids physically kicking props about, and a much bigger school with 14 classrooms in four named wings), and brought the rest in.</p>
+
 <h2>How it&rsquo;s built</h2>
-<ul>
-  <li><strong>Real shadows.</strong> Walls and furniture cast shadows from the torch and from the moonlight coming through the windows, so kids can hide behind desks and bleachers. A light tuner in the pause menu adjusts it all live.</li>
-  <li><strong>Kids that run sensibly.</strong> They flee along a safety map of the whole school, avoid dead ends, sidestep the beam and duck round corners to break line of sight. They won&rsquo;t run past you, so you can corner them.</li>
-  <li><strong>Ported from the old version.</strong> I went through the 2020 Unity game&rsquo;s C#, scenes and prefabs, wrote up everything it had that this one didn&rsquo;t, then brought it all across, the Detective and the Assistant included.</li>
-  <li><strong>Mouse or pad, whichever you touched last.</strong> The on-screen hints switch between keys and pad buttons to match.</li>
-</ul>
+<p>The lighting is real 2D shadows. Walls and furniture cast them from the torch and from the moonlight through the windows, so kids can hide behind desks and bleachers. I didn&rsquo;t want the school pitch black, so there&rsquo;s some global light too, and there&rsquo;s a light tuner in the pause menu that adjusts it all live (so I could mess about with the torch cone and the overall light level until it felt right).</p>
+<p>The kids flee along a safety map of the whole school, avoid dead ends, sidestep the beam and duck round corners to break line of sight. They won&rsquo;t run past you, so you can corner them. It works on mouse or gamepad, whichever you touched last, and the on-screen hints switch to match.</p>
+<p>It&rsquo;s a prototype and there&rsquo;s no build to play yet.</p>
   </article>
 </div>
 </main>

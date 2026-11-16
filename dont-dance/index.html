@@ -35,7 +35,7 @@
 <header class="page-head project-head">
   <p class="crumbs"><a href="/">Work</a><span class="sep" aria-hidden="true">/</span>Don&rsquo;t Dance</p>
   <h1>Don&rsquo;t Dance</h1>
-  <p class="summary">One tired monster, too many tiny singers.</p>
+  <p class="summary">A wee arcade game about a tired monster trying to get to sleep while tiny puffs sing in its bedroom.</p>
   <ul class="stack" aria-label="Technologies"><li>Godot</li><li>Local co-op</li><li>Browser</li></ul>
   <div class="actions">
     <a class="btn" href="/dont-dance/play/">Play it in your browser <span class="arrow" aria-hidden="true">&rarr;</span></a>
@@ -86,8 +86,8 @@
     </dl>
   </aside>
   <article class="prose">
-<p class="lede">You&rsquo;re a tired monster trying to get to sleep. Wee puffs wander round your bedroom, and whenever two of them meet they start singing. Choirs pull in more puffs, the noise fills up your rage, and if it hits 100% you lose.</p>
-<p>To win, break up every choir, let the rage drain away, then lie still in bed for seven quiet seconds.</p>
+<p class="lede">This one started with a mate of mine. He&rsquo;d made a version of it as a single-file HTML prototype (a few versions actually), and I ended up with a folder that was honestly a bit of a muddle. On 3 November I pointed an agent at it to see if we could turn it into a proper Godot game, and this is where it got to.</p>
+<p>You&rsquo;re a tired monster trying to get to sleep. Wee puffs wander round your bedroom, and whenever two of them meet they start singing. Choirs pull in more puffs, the noise fills up your rage, and if it hits 100% you lose. To win you have to break up every choir, let the rage drain away, then lie still in bed for seven quiet seconds.</p>
 
 <div class="notice" id="play">
   <h3>Play it in your browser</h3>
@@ -95,8 +95,8 @@
   <p class="cta"><a class="button" href="/dont-dance/play/">Play Don&rsquo;t Dance &rarr;</a></p>
 </div>
 
-<h2>Four monsters</h2>
-<p>Each one plays differently, keeps its own fastest winning time and sleeps in its own themed bedroom.</p>
+<h2>The monsters</h2>
+<p>There are four right now, and each one plays differently, keeps its own fastest winning time and sleeps in its own themed bedroom. Sludge took the most fiddling. The first version just sort of absorbed puffs, but I wanted them to stick to whichever side of you they hit (walk backwards into one and it&rsquo;s stuck on your back) and then launch out in that direction, so you&rsquo;re aiming with your whole body. It makes it a lot more deliberate. Nimbus came later, from a bit of concept art of a wee storm cloud, and does chain lightning that flings puffs off to either side of the bolt.</p>
 <div class="table-scroll">
 <table>
   <thead>
@@ -111,25 +111,19 @@
 </table>
 </div>
 
-<h2>Controls</h2>
+<h2>Co-op</h2>
+<p>Co-op was the first thing I asked for after the port, one player per monster, as many gamepads as you&rsquo;ve got plus the keyboard. The picker went through a couple of versions. It&rsquo;s now laid out a bit like the Diablo 2 character select, every monster in a row, everyone gets their own coloured arrow (P1, P2 etc.), you can&rsquo;t both grab the same one, and the run starts three seconds after everyone&rsquo;s ready. To win, everyone has to be lying still in their own bed.</p>
 <dl class="facts">
   <dt>Keyboard &amp; mouse</dt>
   <dd>WASD or arrows to move, mouse to aim, Space or left click for your action. Esc pauses, R restarts, F11 for fullscreen.</dd>
   <dt>Gamepad</dt>
   <dd>Left stick to move, right stick to aim (or just aim where you walk), A or right trigger for your action. Start pauses, Back restarts.</dd>
-  <dt>Co-op</dt>
-  <dd>One keyboard and mouse plus as many gamepads as you&rsquo;ve got, one player per monster, all in the same room. Everyone drops their own coloured arrow onto a free monster in the lobby, and the run starts three seconds after everyone&rsquo;s ready. To win, everyone has to be lying still in their own bed.</dd>
 </dl>
 
 <h2>How it&rsquo;s built</h2>
-<p>Don&rsquo;t Dance started as a single-file HTML prototype, went through a few versions like that, then got ported to Godot 4.7.</p>
-<ul>
-  <li><strong>The rules don&rsquo;t know about the graphics.</strong> The simulation is plain GDScript with no nodes, deterministic per seed and stepped at a fixed 60&nbsp;Hz. That means it can be tested headless with thousands of automated rule checks, and the run clock is game time, so it stops when you pause.</li>
-  <li><strong>Tuning lives in data.</strong> Every rule value and every monster is a Godot resource, so it can all be tweaked in the inspector without touching code.</li>
-  <li><strong>A live synthesised choir.</strong> There are no audio files. Every singing puff is a voice in a pentatonic round, panned to where it is in the room, as loud as your monster hears it, and muffled if it&rsquo;s riding inside Sludge.</li>
-  <li><strong>Local co-op per device.</strong> Each keyboard or gamepad joins the lobby and claims its own monster. Movement, aim and abilities only respond to that device, and if a pad disconnects the run pauses until it&rsquo;s back.</li>
-  <li><strong>Web build.</strong> It&rsquo;s exported as a single-threaded WebAssembly build, so it runs on GitHub Pages without any special cross-origin headers.</li>
-</ul>
+<p>The thing that made everything else easier is that the rules don&rsquo;t know about the graphics. The simulation is plain GDScript with no nodes, stepped at a fixed 60&nbsp;Hz and deterministic per seed, so thousands of automated rule checks can run headless, and the run clock is game time, so it stops when you pause. Every rule value and every monster is a Godot resource, so tuning happens in the inspector rather than in code.</p>
+<p>There are no audio files at all. Every singing puff is a voice in a pentatonic round, panned to where it is in the room and as loud as your monster hears it (Sludge hears every choir at the same volume, the others hear nearby ones louder), and puffs riding inside Sludge come out muffled.</p>
+<p>Co-op is per device, so each keyboard or pad claims its own monster and only drives that one, and if a pad disconnects the run pauses until it&rsquo;s back. The web build is single-threaded WebAssembly, which is what lets it run on GitHub Pages without any special cross-origin headers, and is the reason you can play it on this page.</p>
 <ul class="stack" aria-label="Technologies"><li>Godot 4.7</li><li>GDScript</li><li>WebAssembly</li><li>Procedural audio</li><li>Local co-op</li>
 </ul>
   </article>

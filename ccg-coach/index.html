@@ -61,32 +61,29 @@
     </dl>
   </aside>
   <article class="prose">
-<p class="lede">Arena writes a detailed log while you play. ccg-coach reads it, rebuilds each match turn by turn, and stores a plain record of who cast what and when. You can read that record yourself, or ask a model to coach you on it.</p>
-<p>The coach never sees the log. It gets a short brief made from the record, and it has to point at the turns it&rsquo;s talking about.</p>
+<p class="lede">I play a lot of digital card games. I&rsquo;ve worked my way through Hearthstone, Pok&eacute;mon, Yu-Gi-Oh and MTG Arena, and I&rsquo;ve been trying to approach them a bit more analytically. Arena writes a really detailed log while you play, so the idea was a coach that reads it after a match or two and that I can then ask why I lost. It doesn&rsquo;t need to be real-time, it&rsquo;s for after the game.</p>
+<p>ccg-coach reads the log, rebuilds each match turn by turn and stores a plain record of who cast what and when. You can read that record yourself, or ask a model to coach you on it. The first version came together in a day (7 September) in OpenCode, and I use it from a button on my desktop bar.</p>
 
 <h2>How a log becomes a review</h2>
-<ol class="flow">
-  <li><strong>Find and parse.</strong> It finds Arena&rsquo;s log on Linux under Proton or Wine, parses it and turns the raw events into matches, games, turns and actions.</li>
-  <li><strong>Store.</strong> Matches go into SQLite. Importing is idempotent per match, so running it again never doubles anything.</li>
-  <li><strong>Name the cards.</strong> Card IDs are turned into names from a local cache of Scryfall&rsquo;s data.</li>
-  <li><strong>Build the brief.</strong> Code, not a model, picks out the key turns, both deck lists as far as they were seen, and a list of what can&rsquo;t be known from the log.</li>
-  <li><strong>Coach.</strong> The brief goes to the model. Follow-up questions keep the same brief and the conversation so far.</li>
-</ol>
+<p>It finds Arena&rsquo;s log on Linux (I play through Steam, so under Proton or Wine), parses it and turns the raw events into matches, games, turns and actions, then stores them in SQLite. Importing is idempotent per match, so running it again never doubles anything.</p>
+<p>The first review I ran was a wall of &ldquo;20x Unknown(94173)&rdquo;, because Arena&rsquo;s log only has card IDs. Now they&rsquo;re turned into names from a local cache of Scryfall&rsquo;s data.</p>
+<p>Then code, not a model, builds a short brief, the key turns, both deck lists as far as they were seen, and a list of what can&rsquo;t be known from the log. The model only ever gets that brief, never the log. Follow-up questions keep the same brief and the conversation so far, and a review can cover one match or several.</p>
 
 <h2>Keeping the coach honest</h2>
+<p>The obvious problem with this sort of thing is a model confidently talking about cards it never saw, so a lot of the design is about stopping that.</p>
 <ul>
-  <li><strong>Every point is labelled</strong> FACT, INFERENCE or UNCERTAIN, and has to cite a turn number.</li>
-  <li><strong>It can&rsquo;t talk about cards it hasn&rsquo;t seen.</strong> The prompt forbids reasoning about cards that aren&rsquo;t in the brief, and the brief says plainly that the opponent&rsquo;s hand and draws are unknown.</li>
-  <li><strong>The context has a budget.</strong> About 3,000 tokens. Ordinary turns get dropped before key turns, and key turns never are.</li>
-  <li><strong>It doesn&rsquo;t guess.</strong> Cards Arena doesn&rsquo;t name show up as unknown, and a match with no result in the log is stored as unknown.</li>
+  <li>Every point is labelled FACT, INFERENCE or UNCERTAIN, and has to cite a turn number.</li>
+  <li>The prompt forbids reasoning about cards that aren&rsquo;t in the brief, and the brief says plainly that the opponent&rsquo;s hand and draws are unknown.</li>
+  <li>The brief has a budget of about 3,000 tokens. Ordinary turns get dropped before key turns, and key turns never are.</li>
+  <li>Cards Arena doesn&rsquo;t name show up as unknown, and a match with no result in the log is stored as unknown rather than guessed.</li>
 </ul>
 
 <h2>Local first</h2>
-<p>Parsing, storage, the brief and the chat history all stay on your machine. The only thing that leaves is the brief, and only to the endpoint you point it at, which can be a model running locally. Every conversation stores a hash of its prompt, so you can check later exactly what was sent.</p>
+<p>Parsing, storage, the brief and the chat history all stay on your machine. The only thing that leaves is the brief, and only to the endpoint you point it at. That&rsquo;s any OpenAI-compatible API (I started on my OpenCode Zen key), which can be a model running locally. Every conversation stores a hash of its prompt, so you can check later exactly what was sent.</p>
 
 <h2>What it doesn&rsquo;t do yet</h2>
 <ul>
-  <li>It&rsquo;s built around Best-of-1 Standard ladder games.</li>
+  <li>It&rsquo;s built around Best-of-1 Standard ladder games, since that&rsquo;s what I was playing.</li>
   <li>The quality of the coaching hasn&rsquo;t been measured, only the plumbing.</li>
 </ul>
   </article>
