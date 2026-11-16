@@ -10,9 +10,10 @@
 <meta property="og:description" content="Louis Hopkins (Phlawless Development) makes games and tools. A group chat with an AI mediator, a wee arcade game you can play in the browser, and an autochess game for Android.">
 <meta property="og:image" content="https://phlawlessdevelopment.github.io/dont-dance/character-select.webp">
 <link rel="canonical" href="https://phlawlessdevelopment.github.io/">
-<meta name="theme-color" content="#17181b">
+<meta name="theme-color" content="#1d2021">
 <link rel="icon" href="/icon.png">
 <link rel="preload" href="/assets/fonts/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
@@ -32,69 +33,110 @@
   <p class="rail-foot">Web / Games / Systems</p>
 </header>
 <main class="main" id="content">
-<header class="page-head">
-  <h1>Stuff I&rsquo;ve made</h1>
-  <p>I&rsquo;m Louis. I make games and tools, these days mostly with coding agents. You can try two of these in your browser right now, and the autochess game is in closed testing on Google Play.</p>
+<header class="page-head home-head">
+  <p class="prompt" aria-hidden="true"><span class="path">~/projects</span><span class="sigil">$</span><span class="cmd">ls</span></p>
+  <h1>Stuff I&rsquo;ve made<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="intro">I&rsquo;m Louis. I make games and tools, these days mostly with coding agents. You can try two of these in your browser right now, and the autochess game is in closed testing on Google Play.</p>
 </header>
 
-<div class="gallery">
-  <div class="col-wide">
-
-    <article class="exhibit" aria-labelledby="ex-mediator">
-      <div class="exhibit-head">
-        <h2 id="ex-mediator"><a href="/mediator/">Mediator</a></h2>
-        <p class="summary">A group chat with an AI that steps in when people start getting heated.</p>
-        <ul class="stack" aria-label="Technologies"><li>Java</li><li>Spring Boot</li><li>WebSocket</li><li>SQLite</li></ul>
-        <div class="actions">
-          <a class="btn" href="/mediator/#try-it">Try the demo <span class="arrow" aria-hidden="true">&rarr;</span></a>
-          <a class="text-link" href="/mediator/">How it works <span class="arrow" aria-hidden="true">&rarr;</span></a>
-        </div>
-      </div>
-      <a class="mat" href="/mediator/" tabindex="-1" aria-hidden="true">
-        <img src="/mediator/conversation-dark.webp" width="1280" height="800" alt="" loading="eager">
-      </a>
-    </article>
-
-    <article class="exhibit" aria-labelledby="ex-dont-dance">
-      <div class="exhibit-head">
-        <h2 id="ex-dont-dance"><a href="/dont-dance/">Don&rsquo;t Dance</a></h2>
-        <p class="summary">One tired monster, too many tiny singers. A wee arcade game, solo or local co-op.</p>
-        <ul class="stack" aria-label="Technologies"><li>Godot</li><li>Local co-op</li><li>Browser</li></ul>
-        <div class="actions">
-          <a class="btn" href="/dont-dance/play/">Play it in your browser <span class="arrow" aria-hidden="true">&rarr;</span></a>
-          <a class="text-link" href="/dont-dance/">About the game <span class="arrow" aria-hidden="true">&rarr;</span></a>
-        </div>
-      </div>
-      <a class="mat" href="/dont-dance/" tabindex="-1" aria-hidden="true">
-        <img src="/dont-dance/character-select.webp" width="1280" height="720" alt="" loading="lazy">
-      </a>
-    </article>
-
+<div class="toolbar">
+  <div class="filters" role="group" aria-label="Filter projects" hidden>
+    <button class="filter" type="button" data-filter="all" aria-pressed="true">all</button>
+    <button class="filter" type="button" data-filter="game" aria-pressed="false">games</button>
+    <button class="filter" type="button" data-filter="tool" aria-pressed="false">tools</button>
   </div>
-  <div class="col-tall">
-
-    <article class="exhibit" aria-labelledby="ex-autochess">
-      <div class="exhibit-head">
-        <h2 id="ex-autochess"><a href="/autochess/">Phlawless Autochess</a></h2>
-        <p class="summary">Autochess for your phone, a bit like TFT, played in portrait with one thumb.</p>
-        <ul class="stack" aria-label="Technologies"><li>Godot</li><li>GDScript</li><li>Android</li></ul>
-        <div class="actions">
-          <a class="btn" href="/autochess/">Have a look <span class="arrow" aria-hidden="true">&rarr;</span></a>
-        </div>
-      </div>
-      <div class="portrait-media">
-        <a class="mat board" href="/autochess/" tabindex="-1" aria-hidden="true">
-          <img src="/autochess/board.webp" width="720" height="1280" alt="" loading="eager">
-        </a>
-        <a class="mat" href="/autochess/" tabindex="-1" aria-hidden="true">
-          <img src="/autochess/roster-strip.webp" width="720" height="222" alt="" loading="lazy">
-        </a>
-      </div>
-    </article>
-
-  </div>
+  <p class="count" aria-live="polite"><b data-count>3</b>projects</p>
 </div>
+
+<!-- One <li class="project"> per project. data-kind is "game" or "tool" and drives the filters. -->
+<ul class="grid" role="list">
+
+  <li class="project is-focused" data-kind="tool">
+    <p class="pane-title" aria-hidden="true">~/projects/mediator</p>
+    <a class="thumb pin-left" href="/mediator/" tabindex="-1" aria-hidden="true">
+      <img src="/mediator/conversation-dark.webp" width="1280" height="800" alt="" loading="eager">
+    </a>
+    <div class="project-body">
+      <p class="kind tool">tool</p>
+      <h2><a href="/mediator/">Mediator</a></h2>
+      <p class="summary">A group chat with an AI that steps in when people start getting heated.</p>
+      <ul class="stack" aria-label="Technologies"><li>Java</li><li>Spring Boot</li><li>WebSocket</li><li>SQLite</li></ul>
+      <div class="actions">
+        <a class="btn" href="/mediator/#try-it">Try the demo <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="text-link" href="/mediator/">How it works <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </li>
+
+  <li class="project" data-kind="game">
+    <p class="pane-title" aria-hidden="true">~/projects/dont-dance</p>
+    <a class="thumb" href="/dont-dance/" tabindex="-1" aria-hidden="true">
+      <img src="/dont-dance/character-select.webp" width="1280" height="720" alt="" loading="eager">
+    </a>
+    <div class="project-body">
+      <p class="kind game">game</p>
+      <h2><a href="/dont-dance/">Don&rsquo;t Dance</a></h2>
+      <p class="summary">One tired monster, too many tiny singers. A wee arcade game, solo or local co-op.</p>
+      <ul class="stack" aria-label="Technologies"><li>Godot</li><li>Local co-op</li><li>Browser</li></ul>
+      <div class="actions">
+        <a class="btn" href="/dont-dance/play/">Play in browser <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="text-link" href="/dont-dance/">About the game <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </li>
+
+  <li class="project" data-kind="game">
+    <p class="pane-title" aria-hidden="true">~/projects/autochess</p>
+    <a class="thumb phones" href="/autochess/" tabindex="-1" aria-hidden="true">
+      <img src="/autochess/home.webp" width="720" height="1280" alt="" loading="eager">
+      <img src="/autochess/board.webp" width="720" height="1280" alt="" loading="eager">
+      <img src="/autochess/roster.webp" width="720" height="1280" alt="" loading="lazy">
+    </a>
+    <div class="project-body">
+      <p class="kind game">game</p>
+      <h2><a href="/autochess/">Phlawless Autochess</a></h2>
+      <p class="summary">Autochess for your phone, a bit like TFT, played in portrait with one thumb.</p>
+      <ul class="stack" aria-label="Technologies"><li>Godot</li><li>GDScript</li><li>Android</li></ul>
+      <p class="status wip">Closed testing on Google Play</p>
+      <div class="actions">
+        <a class="btn" href="/autochess/">Have a look <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </li>
+
+</ul>
+
+<footer class="statusline" aria-hidden="true">
+  <span>~/projects</span>
+  <span><b data-count>3</b>projects</span>
+</footer>
 </main>
+<script>
+(() => {
+  const grid = document.querySelector(".grid");
+  const bar = document.querySelector(".filters");
+  const counts = document.querySelectorAll("[data-count]");
+  if (!grid || !bar) return;
+  const cards = [...grid.querySelectorAll(".project")];
+  const buttons = [...bar.querySelectorAll(".filter")];
+  const kinds = new Set(cards.map(c => c.dataset.kind));
+  buttons.forEach(b => {
+    const k = b.dataset.filter;
+    const n = k === "all" ? cards.length : cards.filter(c => c.dataset.kind === k).length;
+    if (k !== "all" && !kinds.has(k)) b.remove();
+    else b.insertAdjacentHTML("beforeend", `<span class="n">${n}</span>`);
+  });
+  const apply = k => {
+    let shown = 0;
+    cards.forEach(c => { const on = k === "all" || c.dataset.kind === k; c.hidden = !on; shown += on; });
+    buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.filter === k)));
+    counts.forEach(n => { n.textContent = shown; });
+  };
+  bar.addEventListener("click", e => { const b = e.target.closest(".filter"); if (b) apply(b.dataset.filter); });
+  counts.forEach(n => { n.textContent = cards.length; });
+  bar.hidden = false;
+})();
+</script>
 </div>
 </body>
 </html>
