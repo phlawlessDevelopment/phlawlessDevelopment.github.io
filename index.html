@@ -45,7 +45,7 @@
     <button class="filter" type="button" data-filter="game" aria-pressed="false">games</button>
     <button class="filter" type="button" data-filter="tool" aria-pressed="false">tools</button>
   </div>
-  <p class="count" aria-live="polite"><b data-count>12</b>projects</p>
+  <p class="count" aria-live="polite"><b data-count>13</b>projects</p>
 </div>
 
 <!-- One <li class="project"> per project. data-kind is "game" or "tool" and drives the filters. -->
@@ -81,6 +81,24 @@
       <div class="actions">
         <a class="btn" href="/dont-dance/play/">Play in browser <span class="arrow" aria-hidden="true">&rarr;</span></a>
         <a class="text-link" href="/dont-dance/">About the game <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </li>
+
+  <li class="project" data-kind="game">
+    <p class="pane-title" aria-hidden="true">~/projects/sandpile</p>
+    <a class="thumb" href="/sandpile/" tabindex="-1" aria-hidden="true">
+      <img src="/sandpile/sand-sea.webp" width="1280" height="720" alt="" loading="lazy">
+    </a>
+    <div class="project-body">
+      <p class="kind game">game</p>
+      <h2><a href="/sandpile/">Sandpile</a></h2>
+      <p class="summary">An anti-grav racer on a sea of loose sand you bend into ramps, walls and blasts. Solo against AI, or LAN multiplayer you can join from the browser.</p>
+      <ul class="stack" aria-label="Technologies"><li>Godot</li><li>LAN multiplayer</li><li>Browser</li></ul>
+      <p class="status wip">Prototype</p>
+      <div class="actions">
+        <a class="btn" href="/sandpile/play/">Play in browser <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="text-link" href="/sandpile/">About the game <span class="arrow" aria-hidden="true">&rarr;</span></a>
       </div>
     </div>
   </li>
@@ -261,7 +279,7 @@
 
 <footer class="statusline" aria-hidden="true">
   <span>~/projects</span>
-  <span><b data-count>12</b>projects</span>
+  <span><b data-count>13</b>projects</span>
 </footer>
 </main>
 <script>
